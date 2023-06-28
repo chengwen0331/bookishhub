@@ -28,7 +28,7 @@
         var otp = "<?php echo $resetotp; ?>";
         var entered = prompt('Please enter the OTP: '); 
             if(entered == otp){
-                window.location.href = "http://localhost/bookishHub/resetpass.php?email=" + email;
+                window.location.href = "http://localhost/bookishhub/resetpass.php?email=" + email;
             }else{
                 alert('OTP Uncorrect');
                 window.location.replace('login.php');

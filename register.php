@@ -2,6 +2,8 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+include 'menu.php';
+
 require './PHPMailer/src/Exception.php';
 require './PHPMailer/src/PHPMailer.php';
 require './PHPMailer/src/SMTP.php';
@@ -52,12 +54,18 @@ function sendMail($email,$otp){
   $mail->Password   = 'cpphpxzzxxjcsaxv';                            //
   $mail->SMTPSecure = 'tls';         
   $mail->Port       = 587;
-
+  $mail->SMTPOptions = array(
+    'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+    )
+);
     $from = "bookishhubb@gmail.com";
     $to = $email;
     $subject = 'BookishHub - Please verify your account';
     $message = "<h2>Welcome to BookishHub Website</h2> <p>Thank you for registering your account with us. To complete your registration please click the following.<p>
-    <p><button><a href ='http://localhost/bookishHub/verifyaccount.php?email=$email&otp=$otp'>Verify Here</a></button>";
+    <p><button><a href ='http://localhost/bookishhub/verifyaccount.php?email=$email&otp=$otp'>Verify Here</a></button>";
     
     $mail->setFrom($from,"BookishHub");
     $mail->addAddress($to);                                             //Add a recipient
@@ -74,7 +82,6 @@ function sendMail($email,$otp){
 <html>
     <head>    
         <title>BookishHub</title>
-        <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -89,49 +96,10 @@ function sendMail($email,$otp){
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     </head> 
 <body>
-    <header>
-        <div class="p-3 text-center bg-white border-bottom">
-            <div class="container">
-                <div class="row gy-3 align-items-center">
-                    <div class="col-lg-2 col-sm-4 col-4">
-                        <a href="index.php" class="float-start">
-                            <img src="images/logo.png" width="100%" />
-                        </a>
-                    </div>
-
-                    <div class="col-lg-4 col-sm-6 col-6" style="margin-left: 80px;">
-                        <div class="input-group">
-                            <input type="search" id="form1" class="form-control" placeholder="Search" />
-                            <label class="form-label visually-hidden" for="form1">Search</label>
-                            <button type="button" class="btn shadow-0" style="background-color:#3286AA; color:white;">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-                        <div class="d-flex justify-content-end">
-                        <a href="#" class="icon-hover border rounded py-1 px-3 nav-link d-flex align-items-center btn-margin"> <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </a>
-                        <a href="register.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-margin"> <i class="fas fa-user-plus m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign up</p> </a>    
-                        <a href="login.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center btn-margin"> <i class="fas fa-sign-in-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Login</p> </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav class="navb" style="font-size:20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
-            <a href="index.php" class="navb-link">Home</a>
-            <a href="#" class="navb-link">Books</a>
-            <a href="about.html" class="navb-link">About</a>
-            <a href="faqs.html" class="navb-link">FAQs</a>
-            <a href="contactus.html" class="navb-link">Contact</a>
-        </nav>
-    </header>
-
     <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:50px">
       <div class="w3-row w3-card">
         <div class="w3-half w3-container" style="margin-top: 130px; margin-bottom:50px;display: flex; justify-content: center; align-items: center;"> 
-          <img class="w3-image w3-padding" style="width:100%; height:100%;object-fit:cover; text-align: center;" src="image/register.jpg">
+          <img class="w3-image w3-padding" style="width:100%; height:100%;object-fit:cover; text-align: center;" src="images/register.jpg">
         </div>
         <div class="w3-half w3-container" style="margin-top: 50px; margin-bottom:50px;">
                <h4 style="font-size: 40px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; margin-bottom:40px;">Register New Account</h4>

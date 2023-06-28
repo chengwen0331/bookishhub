@@ -2,10 +2,42 @@
 include_once("dbconnect.php");
 include "menu.php";
 
+$sqlquery = "";
+
 if (isset($_GET['submit'])) {
-    include_once("dbconnect.php");
+    
     if ($_GET['submit'] == "cart") {
-        if ($useremail == "Guest") {
+        if ($useremail != "Guest"){
+            $bookid = $_GET['bookid'];
+            $cartqty = "1";
+            $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
+            $stmt->execute();
+            $number_of_rows = $stmt->rowCount();
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll();
+            if ($number_of_rows > 0){
+                foreach ($rows as $carts){
+                    $cartqty = $carts['cart_qty'];
+                }
+                $cartqty = $cartqty + 1;
+                $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
+                $conn->exec($updatecart);
+                echo "<script>alert('Cart updated')</script>";
+                echo "<script> window.location.replace('index.php')</script>";
+            }
+            else{
+                $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$cartqty')";
+                try{
+                    $conn->exec($addcart);
+                    echo "<script>alert('Success')</script>";
+                    echo "<script> window.location.replace('index.php')</script>";
+                }
+                catch(PDOException $e){
+                    echo "<script>alert('Failed')</script>";
+                }
+            }
+        }
+        else{
             echo "<script>alert('Please login or register')</script>";
             echo "<script> window.location.replace('login.php')</script>";
         }
@@ -14,20 +46,40 @@ if (isset($_GET['submit'])) {
         $search = $_GET['search'];
         $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
     }
-} else {
+} 
+else {
     $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
 }
 
+$stmtqty = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail'");
+$stmtqty->execute();
+$resultqty = $stmtqty->setFetchMode(PDO::FETCH_ASSOC);
+$rowsqty = $stmtqty->fetchAll();
+$carttotal = 0; // Initialize $carttotal variable
+foreach ($rowsqty as $carts){
+    $carttotal += $carts['cart_qty'];
+}
+$_SESSION['carttotal'] = $carttotal;
+
 $stmt = $conn->prepare($sqlquery);
 $stmt->execute();
+$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 $rows = $stmt->fetchAll();
+
+function subString($str){
+    if (strlen($str) > 15){
+        return $substr = substr($str, 0, 15) . '...';
+    }
+    else{
+        return $str;
+    }
+}
 
 ?>
 <!DOCTYPE html>
 <html>
     <head>    
         <title>BookishHub</title>
-        <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -151,7 +203,7 @@ $rows = $stmt->fetchAll();
                             <h5 class="card-title" style="font-weight:bold;"><?php echo $row['book_title']; ?></h5>
                             <p class="card-text" style="font-size: medium;"><?php echo "RM ". $row['book_price']; ?></p>
                             <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#" class="button btn-sm px-3 me-2" onclick="addToCart(<?php echo $row['book_id']; ?>)">
+                                <a href="index.php?bookid=<?php echo $row['book_id']; ?>&submit=cart" class="button btn-sm px-3 me-2" onclick="addToCart(<?php echo $row['book_id']; ?>)">
                                     <i class="fas fa-cart-plus"></i> Add to cart
                                 </a>
                             </div>
@@ -166,6 +218,36 @@ $rows = $stmt->fetchAll();
         <hr></hr>
          <p class="w3-center">&copy;2023 | BookishHub&reg;</p>
     </footer>
+    <script>
+        function addToCart(bookid) {
+            jQuery.ajax({
+                type: "GET",
+                url: "updatecartajax.php",
+                data: {
+                    bookid: bookid,
+                    submit: 'add',
+                },
+                cache: false,
+                dataType: "json",
+                success: function(response) {
+                    var res = JSON.parse(JSON.stringify(response));
+                    console.log("HELLO ");
+                    console.log(res.status);
+                    if (res.status == "success") {
+                        console.log(res.data.carttotal);
+                        //document.getElementById("carttotalida").innerHTML = "Cart (" + res.data.carttotal + ")";
+                        document.getElementById("carttotalidb").innerHTML = "Cart (" + res.data.carttotal + ")";
+                        alert("Success");
+                    }
+                    if (res.status == "failed") {
+                        alert("Please login/register account");
+                    }
+                    
+
+                }
+            });
+        }
+</script>
 </body>
 
 </html>

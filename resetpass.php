@@ -164,7 +164,7 @@ isset($_GET['email']) ? $email=$_GET['email'] : $email='';
         echo "<script>alert('The email is empty')</script>";
         $password = $_POST["password"];
         $passwordb = $_POST["passwordb"];
-        echo "<script>window.location.href = \"http://localhost/bookishHub/resetpass.php?email=$email\"</script>";
+        echo "<script>window.location.href = \"http://localhost/bookishhub/resetpass.php?email=$email\"</script>";
        
       }
     } else {
@@ -175,7 +175,7 @@ isset($_GET['email']) ? $email=$_GET['email'] : $email='';
       $_SESSION['password'] = $password;
       $_SESSION['passwordb'] = $passwordb;
 
-      echo "<script>window.location.href = \"http://localhost/bookishHub/resetpass.php?email=$email\"</script>";
+      echo "<script>window.location.href = \"http://localhost/bookishhub/resetpass.php?email=$email\"</script>";
       
     }
   }

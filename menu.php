@@ -1,6 +1,7 @@
 <?php
 include_once("dbconnect.php");
 session_start();
+$carttotal = isset($_SESSION['carttotal']) ? $_SESSION['carttotal'] : 0;
 $useremail = "Guest";
 $user_name = "Guest";
 $user_phone = "-";
@@ -52,9 +53,9 @@ if (isset($_SESSION['sessionid'])) {
 
                     <div class="order-lg-last col-lg-5 col-sm-8 col-8">
                         <div class="d-flex justify-content-end">
-                            <a href="#" class="icon-hover border rounded py-1 px-3 nav-link d-flex align-items-center">
+                            <a href="cart.php" class="icon-hover border rounded py-1 px-3 nav-link d-flex align-items-center">
                                 <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">My cart</p>
+                                <p class="d-none d-md-block mb-0">My cart (<?php echo $carttotal?>)</p>
                             </a>
                             <?php if ($useremail == "Guest") { ?>
                                 <a href="register.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
@@ -85,7 +86,7 @@ if (isset($_SESSION['sessionid'])) {
             <a href="index.php" class="navb-link">Home</a>
             <a href="#" class="navb-link">Books</a>
             <a href="about.php" class="navb-link">About</a>
-            <a href="#" class="navb-link">FAQs</a>
+            <a href="faqs.php" class="navb-link">FAQs</a>
             <a href="contactus.php" class="navb-link">Contact</a>
         </nav>
     </header>

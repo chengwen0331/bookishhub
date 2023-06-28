@@ -1,3 +1,29 @@
+<?php
+include_once("dbconnect.php");
+include "menu.php";
+
+if (isset($_GET['submit'])) {
+    include_once("dbconnect.php");
+    if ($_GET['submit'] == "cart") {
+        if ($useremail == "Guest") {
+            echo "<script>alert('Please login or register')</script>";
+            echo "<script> window.location.replace('login.php')</script>";
+        }
+    }
+    if ($_GET['submit'] == "search") {
+        $search = $_GET['search'];
+        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
+    }
+} else {
+    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
+}
+
+$stmt = $conn->prepare($sqlquery);
+$stmt->execute();
+$rows = $stmt->fetchAll();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,68 +40,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
             list-style: none;
             text-decoration: none;
             color:black;
         }
         body{
             background-color: rgb(250, 251, 253);
-        }
-        header{
-            position: fixed;
-            width: 100%;
-            top:0;
-            right:0;
-            z-index:1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 28px 12%;
-            transition: all .50s ease;
-            background: rgb(146, 187, 209);
-        }
-        .navbar{
-            display: flex;
-        }
-        .navbar a{
-            padding: 5px 0;
-            color:black;
-            text-transform: capitalize;
-            font-weight: 400;
-            transition: all 0.50s ease;
-            font-size: 18px;
-            margin: 0px 30px;
-        }
-        .navbar a:hover{
-            color: rgb(255, 90, 90);
-            text-decoration: underline;
-        }
-        .main{
-            display: flex;
-            align-items: center;
-        }
-        .main a{
-            margin-right: 25px;
-            margin-left: 10px;
-            transition: all 0.50s ease;
-            font-size: 18px;
-            font-weight: 400;
-        }
-        .main a:hover{
-            color: rgb(255, 90, 90);
-            text-decoration: underline;
-        }
-        .main i:hover{
-            color: rgb(255, 90, 90);
-        }
-        .user{
-            display: flex;
-            align-items: center;
-        }
-        .user i{
-            font-size: 25px;
-            margin-right: 7px;
         }
         div {
             display: block;
@@ -88,10 +58,11 @@
         .contain{
             width: 100%;
             margin: 10px;
-            padding: 60px 12%;
+            padding-bottom: 2.5rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         .top_title {
-            padding-top: 1.25rem;
             padding-bottom: 1.25rem;
             display: flex;
             margin: auto;
@@ -114,7 +85,7 @@
             text-align: center;
         }
         .box-1{
-            padding-top: 1rem;
+            padding-top: 0.5rem;
             overflow: hidden;
         }
         .box-1-1{
@@ -165,12 +136,12 @@
         .contain-text ul{
             margin-bottom: 0;
             text-align: left;
-            padding-left: 2.5rem;
+            padding-left: 2.8rem;
             list-style-type: disc;
             margin-top: 1.25rem;
             list-style: none;
             margin: 0;
-            padding: 0;
+            
         }
         .contain-text ul li{
             margin-bottom: 0.5rem;
@@ -196,13 +167,12 @@
             padding-bottom: 2.5rem;
             padding-left: 1rem;
             padding-right: 1rem;
-            max-width: 80rem;
+            max-width: 64rem;
             margin-left: auto;
             margin-right: auto;
             margin-top: 50px;
         }
         .box-2 h2{
-            top: -4rem;
             width: 100%;
             display: block;
             font-weight: 700;
@@ -238,24 +208,83 @@
             color: rgb(24, 76, 233);
             text-decoration: underline;
         }
+        .footer_info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
+
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
+
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+            }
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size:20px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <img src="images/logo.jpeg" class="logo" alt="logo" width="150px" height="100px"> 
-        <ul class="navbar">
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">ABOUT</a></li>
-            <li><a href="#">BOOK</a></li>
-            <li><a href="#">CONTACT</a></li>
-            <li><a href="#">FAQs</a></li>
-        </ul> 
-        <div class="main">
-            <a href="#" class="user"><i class="fa-solid fa-user"></i>Sign In</a>
-            <a href="#" class="wishlist"><i class="fa-solid fa-heart"></i></a>
-            <a href="#" class="cart"><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
-        </div>    
-    </header>
     <div class="contain">
         <div class="top_title">
             <div class="title_box">
@@ -311,23 +340,69 @@
                                     <p>Bookish Hub Components Pte Ltd is a member of a world-wide Group of companies of which Electrocomponents plc is the parent company. Bookish Hub Components Pte Ltd may share information collected about you via the Bookish Hub web site with other members of this Group . Where the sharing of information with other members of the Group involves a transfer of your information overseas, the recipient is either located in a country or under an enforceable legal obligation to Bookish Hub Components Pte Ltd (or the Group as a whole) to ensure that the standard of protection is comparable to the protection under the PDPA. The members of this Group never sell, rent, or give away information that personally identifies customers to third parties except where elements of the business have been outsourced and the provision of such information is required for the provision of the service to you. Under such circumstances, the security and confidentiality of personal information would form a part of the legal agreement between us and the supplier. From time to time, we may release aggregated and anonymised marketing statistics to business partners, or may use these in press releases, advertising, or published reports. We would only personally identify you or any other customer in such press releases, advertising, or reports with your prior consent. Bookish Hub Components Pte Ltd may also disclose user information in special cases when we have reason to believe that disclosing this information is necessary to identify, contact or bring legal action against someone who may be causing injury to or interference with (either intentionally or unintentionally) Bookish Hub Components' rights or property, other Bookish Hub users, or anyone else that could be harmed by such activities. In addition, Bookish Hub Components Pte Ltd may disclose user information when the law requires it.</p>
                                     <p id="q7"><strong>What are my choices regarding collection, use, and distribution of my information?</strong></p>
                                     <p>Bookish Hub may, from time to time, send you email regarding our products and About Bookish Hub. In addition, we may occasionally send you direct mail about products and About Bookish Hub that we feel may be of interest to you. Only Bookish Hub or its agents will send you these direct mailings.</p>
-                                    <p>If you do not wish to receive details of these other offers then please contact the Marketing Department of Bookish Hub Components Pte Ltd by faxing it to +60198745632 or sending via email to&nbsp;<a href="mailto:Orders.SA@bookishHub-components.com">Orders.SA@bookishHub-components.com</a>.</p>
+                                    <p>If you do not wish to receive details of these other offers then please contact the Marketing Department of Bookish Hub Components Pte Ltd by faxing it to +60198745632 or sending via email to&nbsp;<a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a>.</p>
                                     <p id="q8"><strong>What is Bookish Hub Online's policy on allowing me to update, correct, or delete my personally identifiable information?</strong></p>
                                     <p>You may access, correct or update your Personal Profile information at any time by clicking on the Update My Details button on your home page navigation bar. If you have forgotten your password, or have any other problems accessing the site, please contact the Bookish Hub HelpDesk on +60198745632.</p>
-                                    <p>If you have forgotten your password, or have any other problems accessing the site, please contact the Marketing Department of Bookish Hub Components Pte Ltd by faxing it to +60198745632 or sending via email to&nbsp;<a href="mailto:Orders.SA@bookishHub-components.com">Orders.SA@bookishHub-components.com</a>.</p>
+                                    <p>If you have forgotten your password, or have any other problems accessing the site, please contact the Marketing Department of Bookish Hub Components Pte Ltd by faxing it to +60198745632 or sending via email to&nbsp;<a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a>.</p>
                                     <p>However, please note that should you edit or delete your personal information it may no longer be possible to provide you with information, notices, services and/or products requested; your ability to enter and participate in any contests or promotions organised by us may be affected; and the ability of third parties to enter into the necessary agreements in relation to the provision of services to you may also be affected.</p>
                                     <p><strong>Additional Information</strong></p>
                                     <p>You may contact Bookish Hub Components Pte Ltd at any time (a) to disclose all the information that it has collected about you, as well as the purposes for which such information had been used or disclosed in the preceding year, (b) request that we specify or explain our policies and procedures in relation to the information collected, used and disclosed by us; (c) withdraw, in full or in part, your consent given previously or request deletion of your information, in each case subject to any applicable legal restrictions, contractual conditions and a reasonable time period. Please note, however, that we may still be entitled to process your information if we have another legitimate reason (other than consent) for doing so; and (d) lodge a complaint with the competent authority if you think that any of your rights have been infringed by us.</p>
                                     <p>Questions regarding this policy or your information should be directed to the Marketing Department with the following contact details:</p>
                                     <p>Bookish Hub Components Pte Ltd.</p>
                                     <p>Tel:&nbsp;+60198745632 (Mon-Fri 9am-6pm)
-                                    Email:&nbsp;<a href="mailto:Orders.SA@bookishHub-components.com">Orders.SA@bookishHub-components.com</a></p>
+                                    Email:&nbsp;<a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></p>
                                     <p><strong>Changes to our Privacy Policy</strong></p>
                                     <p>Bookish Hub Components Pte Ltd may occasionally change all or part of this privacy policy. Any changes will be effective immediately upon our posting of the updated privacy policy. If we make any material changes to this privacy policy, we will notify you of the changes through our website or e-mail. If we make changes to the type of information collected, the purpose for collecting your information, who we may share your information with, or how we may use your information, we will notify you in advance of such changes request your consent if required.</p>
                             
                         </article>  
                 </div>       
         </div>
-    </div>        
+    </div> 
+    <footer>
+        <div class="footer_info">
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">New Arrival</a></li>
+                    <li><a href="#">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
+                    <li>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
+                    </li>
+                </ul>
+            </div>
+        </div>    
+        <div class="copy-right">
+            <p>
+                Copyright © 2023 | BookishHub®
+            </p>
+        </div>
+    </footer> 
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>      
 </body>
 </html>

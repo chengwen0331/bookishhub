@@ -1,3 +1,29 @@
+<?php
+include_once("dbconnect.php");
+include "menu.php";
+
+if (isset($_GET['submit'])) {
+    include_once("dbconnect.php");
+    if ($_GET['submit'] == "cart") {
+        if ($useremail == "Guest") {
+            echo "<script>alert('Please login or register')</script>";
+            echo "<script> window.location.replace('login.php')</script>";
+        }
+    }
+    if ($_GET['submit'] == "search") {
+        $search = $_GET['search'];
+        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
+    }
+} else {
+    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
+}
+
+$stmt = $conn->prepare($sqlquery);
+$stmt->execute();
+$rows = $stmt->fetchAll();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,68 +40,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
             list-style: none;
             text-decoration: none;
             color:black;
         }
         body{
             background-color: rgb(250, 251, 253);
-        }
-        header{
-            position: fixed;
-            width: 100%;
-            top:0;
-            right:0;
-            z-index:1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 28px 12%;
-            transition: all .50s ease;
-            background: rgb(146, 187, 209);
-        }
-        .navbar{
-            display: flex;
-        }
-        .navbar a{
-            padding: 5px 0;
-            color:black;
-            text-transform: capitalize;
-            font-weight: 400;
-            transition: all 0.50s ease;
-            font-size: 18px;
-            margin: 0px 30px;
-        }
-        .navbar a:hover{
-            color: rgb(255, 90, 90);
-            text-decoration: underline;
-        }
-        .main{
-            display: flex;
-            align-items: center;
-        }
-        .main a{
-            margin-right: 25px;
-            margin-left: 10px;
-            transition: all 0.50s ease;
-            font-size: 18px;
-            font-weight: 400;
-        }
-        .main a:hover{
-            color: rgb(255, 90, 90);
-            text-decoration: underline;
-        }
-        .main i:hover{
-            color: rgb(255, 90, 90);
-        }
-        .user{
-            display: flex;
-            align-items: center;
-        }
-        .user i{
-            font-size: 25px;
-            margin-right: 7px;
         }
         div {
             display: block;
@@ -134,24 +104,83 @@
             color: rgb(24, 76, 233);
             text-decoration: underline;
         }
+        .footer_info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
+
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
+
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+            }
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size:20px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <img src="images/logo.jpeg" class="logo" alt="logo" width="150px" height="100px"> 
-        <ul class="navbar">
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">ABOUT</a></li>
-            <li><a href="#">BOOK</a></li>
-            <li><a href="#">CONTACT</a></li>
-            <li><a href="#">FAQs</a></li>
-        </ul> 
-        <div class="main">
-            <a href="#" class="user"><i class="fa-solid fa-user"></i>Sign In</a>
-            <a href="#" class="wishlist"><i class="fa-solid fa-heart"></i></a>
-            <a href="#" class="cart"><i class="fa-sharp fa-solid fa-cart-shopping"></i></a>
-        </div>    
-    </header>
         <div class="box-2">
                 <h2>Terms of Service</h2>
                 <div class="box-2-2">
@@ -250,10 +279,55 @@
                                     <p>You can review the most current version of the Terms of Service at any time at this page.
                                         We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes. Your continued use of or access to our website or the Service following the posting of any changes to these Terms of Service constitutes acceptance of those changes.</p><br>
                                     <p><strong>CONTACT INFORMATION</strong></p>
-                                    <p>Questions about the Terms of Service should be sent to us at&nbsp;<a href="mailto:Orders.SA@bookishHub-components.com">Orders.SA@bookishHub-components.com</a>.</p>
+                                    <p>Questions about the Terms of Service should be sent to us at&nbsp;<a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a>.</p>
                         </article>  
                 </div>       
         </div>
-    </div>        
+        <footer>
+        <div class="footer_info">
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">New Arrival</a></li>
+                    <li><a href="#">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
+                    <li>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
+                    </li>
+                </ul>
+            </div>
+        </div>    
+        <div class="copy-right">
+            <p>
+                Copyright © 2023 | BookishHub®
+            </p>
+        </div>
+    </footer> 
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>       
 </body>
 </html>

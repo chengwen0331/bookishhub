@@ -1,6 +1,6 @@
 <?php
 include_once("dbconnect.php");
-
+include "menu.php";
 
 if (isset($_GET['submit'])) {
     include_once("dbconnect.php");
@@ -42,7 +42,6 @@ $rows = $stmt->fetchAll();
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
         body{
             background-color: rgb(250, 251, 253);
@@ -248,29 +247,49 @@ $rows = $stmt->fetchAll();
                 min-height: 1.2em;
                 padding: 0px 2px 1px;
             }
-        .icon{
+        .view-icon{
+            background-image: url("images/email.png");
+            background-size: cover;
             width: 40px;
+            height: 40px;
             margin-right: 0.7rem;
+            display: inline-block;
         }
-        .contact-info{
+        .view-icon1{
+            background-image: url("images/phone.png");
+            background-size: cover;
+            width: 40px;
+            height: 40px;
+            margin-right: 0.7rem;
+            display: inline-block;
+        }
+        .view-icon2{
+            background-image: url("images/location.png");
+            background-size: cover;
+            width: 40px;
+            height: 40px;
+            margin-right: 0.7rem;
+            display: inline-block;
+        }
+        .contact_info{
             padding: 2.3rem 2.2rem;
             position: relative;
         }
-        .contact-info .title{
+        .contact_info .title{
             color: black;
         }
-        .information{
+        .view-information{
             display: flex;
             color:#555;
             margin:0.7rem 0;
             align-items: center;
             font-size: 0.95rem;
         }
-        .btn{
+        .clickable-btn{
             padding:0.8rem 2rem;
             background-color: rgb(67, 149, 184);
             border: 2px solid #fafafa;
-            font-size: 0.95rem;
+            font-size: 1.2rem;
             color: white;
             outline: none;
             cursor: pointer;
@@ -278,13 +297,86 @@ $rows = $stmt->fetchAll();
             margin:10px;
             font-weight: 600;
             position: relative;
-            left: 30%;
+            left: 35%;
         }
-        .btn:hover{
+        .clickable-btn:hover{
             background-color: rgb(146, 187, 209);
             color:white;
         }
-        
+        .footer_info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
+
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
+
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+            }
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size:20px;
+        }
     </style>
 </head>
 <body>  
@@ -292,7 +384,7 @@ $rows = $stmt->fetchAll();
             <div class="contact-form">
                 <form action="">
                     <h3 class="title">Contact Us</h3>
-                    <h3 style="font-size: 1rem;">Reason for Contact</h3>
+                    <h3 style="font-size: 1.2rem;">Reason for Contact</h3>
                     <div class="reason">
                         <select id="-name" class="select_reason"><option value="Retail Enquiry">Retail Enquiry</option><option value="Book Enquiry">Book Enquiry</option><option value="Billing &amp; Payment Enquiry">Billing &amp; Payment Enquiry</option><option value="Shipping Enquiry">Shipping Enquiry</option><option value="Promo &amp; Discount Enquiry">Promo &amp; Discount Enquiry</option><option value="Order Enquiry">Order Enquiry</option><option value="Others">Others</option></select>
                     </div>
@@ -327,23 +419,23 @@ $rows = $stmt->fetchAll();
                         </div>
       
                     </div>
-                    <input type="submit" value="Send" class="btn">
-                    <input type="reset" value="Reset" class="btn">
+                    <input type="submit" value="Send" class="clickable-btn">
+                    <input type="reset" value="Reset" class="clickable-btn">
                 </form>
             </div>
-            <div class="contact-info">
+            <div class="contact_info">
                 <h3 class="title">Contact Information</h3>
-                <div class="info">
-                    <div class="information">
-                        <img src="images/email.png" alt="email" class="icon">
-                        <p>Orders.SA@bookishHub-components.com</p>
+                <div class="view-info">
+                    <div class="view-information">
+                        <span class="view-icon"></span>
+                        <p>bookishhubb@gmail.com</p>
                     </div>
-                    <div class="information">
-                        <img src="images/phone.png" alt="phone" class="icon">
+                    <div class="view-information">
+                        <span class="view-icon1"></span>
                         <p>+6019-8745632 (Customer Service Enquiry Hotline)</p>
                     </div>
-                    <div class="information">
-                        <img src="images/location.png" alt="location" class="icon">
+                    <div class="view-information">
+                        <span class="view-icon2"></span>
                         <p>8, Jalan 7/118b, Desa Tun Razak, 56000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur</p>
                     </div>
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1615.6980298764083!2d101.7188327824274!3d3.0775515341498823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc359b609f33b7%3A0x7e5b7e7100a0c859!2s8%2C%20Jalan%207%2F118b%2C%20Desa%20Tun%20Razak%2C%2056000%20Kuala%20Lumpur%2C%20Wilayah%20Persekutuan%20Kuala%20Lumpur!5e0!3m2!1sen!2smy!4v1687049320333!5m2!1sen!2smy" width="100%" height="350" style="border:2px solid black;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -351,6 +443,50 @@ $rows = $stmt->fetchAll();
             </div>
         
     </div>
+    <footer>
+        <div class="footer_info">
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">New Arrival</a></li>
+                    <li><a href="#">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
+                    <li>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
+                    </li>
+                </ul>
+            </div>
+        </div>    
+        <div class="copy-right">
+            <p>
+                Copyright © 2023 | BookishHub®
+            </p>
+        </div>
+    </footer>
     <script>
         const inputs = document.querySelectorAll(".input");
         function focusFunc(){

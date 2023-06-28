@@ -96,56 +96,79 @@ $rows = $stmt->fetchAll();
             text-align: justify;
             line-height: 20px;
         }
-        footer{
-            background-color: white;
-            color: black;
+        .footer_info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
-        .footer_info{
-            width: 90%;
-            margin: 0 auto;
-            display: flex;
-            padding: 50px 0;
+
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
         }
-        .footer_info .footer_width{
-            padding: 0 70px;
-        }
-        .footer_info h2{
-            margin-bottom: 20px;
-        }
-        .about .service, .contact{
-            width: 40%;
-            justify-content: space-between;
-        }
-        .social_media{
-            margin-top:30px;
-        }
-        .social_media ul{
-            display: flex;
-        }
-        .social_media ul li i{
-            display: inline-block;
-            margin-right: 50px;
-            width: 50px;
-            height: 50px;
-            padding-top: 12px;
-            background-color: transparent;
-            border: 1px solid black;
-            text-align: center;
-        }
-        .contact ul li,
-        .operation ul li{
-            display: flex;
-            align-items: center;
+
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
             margin-bottom: 15px;
         }
-        .contact ul li span, 
-        .operation ul li span{
-            margin-right: 15px;
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
         }
-        .copy-right{
-            padding:15px 0;
+
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
+
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+            }
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
             text-align: center;
-            background-color: #666;
+            font-size:20px;
         }
     </style>
 </head>
@@ -233,66 +256,45 @@ $rows = $stmt->fetchAll();
     </div>
     <footer>
         <div class="footer_info">
-            <div class="footer_width about" id="about_info">
-                <h2>About Us</h2>
-                <p>
-                    Sakura Restaurant is a good choice and everyone<br> 
-                    can enjoy tasty food here. Better food, Better mood,<br> 
-                    the food here tastes like paradise. You also have a <br>
-                    chance to customize your meals. Please come and try it.<br> 
-                </p>
-                <div class="social_media">
-                    <ul>
-                        <li>
-                            <i class="fa-brands fa-facebook-f" style="font-size: 20px;"></i>
-                        </li>
-                        <li>
-                            <i class="fa-brands fa-instagram" style="font-size: 20px;"></i>
-                        </li>
-                        <li>
-                            <i class="fa-brands fa-square-twitter" style="font-size: 20px;"></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer_width service">
-                <h2>Customer Service</h2>
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
                 <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">New Arrival</a></li>
+                    <li><a href="#">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
                     <li>
-                        <span><i class="fa-regular fa-clock"></i></span>
-                        <p>
-                            9:00 a.m. to 10:00 p.m.
-                        </p>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
                     </li>
                 </ul>
             </div>
-            <div class="footer_width contact" id="contact_info">
-                <h2>Contact Info</h2>
-                <ul>
-                    <li>
-                        <span><i class="fa-regular fa-envelope"></i></span>
-                        <p>
-                            sakuRa@gmail.com
-                        </p>
-                    </li>
-                    <li>
-                        <span><ion-icon name="call-outline"></ion-icon></span>
-                        <p>
-                            +60-182129139
-                        </p>
-                    </li>
-                    <li>
-                        <span><ion-icon name="location-outline"></ion-icon></span>
-                        <p>
-                            8, Lorong Ciku 5, Taman Mas Baru, 30100 Ipoh, Perak
-                        </p>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        </div>    
         <div class="copy-right">
             <p>
-                ©2023 | BookishHub®
+                Copyright © 2023 | BookishHub®
             </p>
         </div>
     </footer>
