@@ -183,3 +183,77 @@ body, h1, h2, h3, h4, h5, h6 {
   .btn-margin {
     margin-right: 5px;
   }
+  .footer_info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    justify-items: center;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.quicklinks ul,
+.contact_info {
+    list-style: none;
+    padding: 0;
+}
+
+.quicklinks h2,
+.contact_us h2 {
+    position: relative;
+    margin-bottom: 15px;
+}
+.quicklinks h2:after,
+.contact_us h2:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    height: 4px;
+    width: 50px;
+    background-color: #cc2e2e;
+}
+
+.quicklinks ul li,
+.contact_info li {
+    margin-bottom: 10px;
+}
+
+.quicklinks ul li a {
+    text-decoration: none;
+    color: #000;
+}
+.quicklinks ul li a:hover {
+    text-decoration: underline;
+    color: blue;
+}
+.contact_info li {
+    display: flex;
+    margin-bottom: 10px;
+    }
+.contact_info span {
+    margin-right: 8px;
+    display: flex;
+}
+
+.contact_info p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.contact_info li a {
+    text-decoration: none;
+    color: #000;
+}
+.contact_info li a:hover {
+    text-decoration: underline;
+    color: blue;
+}
+.copy-right {
+    background-color: #f2f2f2;
+    padding: 20px;
+    text-align: center;
+    font-size:20px;
+}

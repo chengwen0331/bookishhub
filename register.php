@@ -62,7 +62,7 @@ function sendMail($email,$otp){
     )
 );
     $from = "bookishhubb@gmail.com";
-    $to = $email;
+    $to = $email;   
     $subject = 'BookishHub - Please verify your account';
     $message = "<h2>Welcome to BookishHub Website</h2> <p>Thank you for registering your account with us. To complete your registration please click the following.<p>
     <p><button><a href ='http://localhost/bookishhub/verifyaccount.php?email=$email&otp=$otp'>Verify Here</a></button>";
