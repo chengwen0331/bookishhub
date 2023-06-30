@@ -43,7 +43,6 @@ function subString($str)
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="css/booklist_style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="js/script.js"></script>
 
@@ -63,6 +62,78 @@ function subString($str)
         .book-title a:hover {
             color: #3286AA;
             text-decoration: underline;
+        }
+
+        /* Book List Styles */
+
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Karma", sans-serif;
+        }
+
+        .w3-bar-block .w3-bar-item {
+            padding: 20px;
+        }
+
+        .w3-grid-template {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 15px;
+        }
+
+        .w3-card {
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .w3-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(50, 132, 171, 0.2);
+        }
+
+        .w3-image {
+            width: 100%;
+            height: 370px;
+            object-fit: cover;
+        }
+
+        .w3-description {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+
+        }
+
+        .w3-button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: blue;
+            color: white;
+            border-radius: 5px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .w3-card {
+                height: auto;
+            }
+
+            .w3-image {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+
         }
     </style>
 
@@ -101,24 +172,22 @@ function subString($str)
                 $book_qty = $book['book_qty'];
 
                 // Displaying book information in a card format with a link to details page
-                echo "<div class='w3-center w3-padding-small' style='min-height:350px'>
-        <div class='w3-card w3-round-large'>
-            <div class='w3-padding-small'>
-                <img class='w3-container w3-image' src='images/$bookid.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='min-height:240px'>
-            </div>
-            <div class='w3-description'>
-               <h6 class='book-title'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                echo "
+                <div class='w3-center w3-padding-small' style='min-height:350px'>
+                    <div class='w3-card w3-round-large'>
+                        <div class='w3-padding-small'>
+                            <img class='w3-container w3-image' src='images/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px'>
+                        </div>
+                        <div class='w3-description'>
+                        <h6 class='book-title'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                                        <p>RM $book_price / $book_qty avail</p>
+                            <a href='index.php?bookid=$bookid&submit=cart' class='w3-button w3-round-small' style='background-color: #3286AA; color: white;'>
+                            <i class='fas fa-cart-plus'></i> Add to cart
+                        </a>
 
-
-
-                <p>RM $book_price / $book_qty avail</p>
-       <a href='index.php?bookid=$bookid&submit=cart' class='w3-button w3-round-small' style='background-color: #3286AA; color: white;'>
-    <i class='fas fa-cart-plus'></i> Add to cart
-</a>
-
-            </div>
-        </div>
-    </div>";
+                        </div>
+                    </div>
+                </div>";
             }
             ?>
         </div>
