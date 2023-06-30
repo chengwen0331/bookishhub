@@ -10,14 +10,27 @@ if (isset($_SESSION['sessionid'])) {
     $useremail = $_SESSION['user_email'];
     $user_name = $_SESSION['user_name'];
     $user_phone = $_SESSION['user_phone'];
-    $stmtQty = $conn->prepare("SELECT SUM(cart_qty) AS total_quantity FROM tbl_carts WHERE user_email = :useremail");
-    $stmtQty->bindParam(':useremail', $useremail);
-    $stmtQty->execute();
-    $totalQuantity = $stmtQty->fetch(PDO::FETCH_ASSOC)['total_quantity'];
 
-    // Set the $carttotal variable to the retrieved total quantity
-    $carttotal = $totalQuantity ?? 0;
+    // Check if tbl_carts has the email
+    $stmtCheckCart = $conn->prepare("SELECT COUNT(*) AS cart_exists FROM tbl_carts WHERE user_email = :useremail");
+    $stmtCheckCart->bindParam(':useremail', $useremail);
+    $stmtCheckCart->execute();
+    $cartExists = $stmtCheckCart->fetch(PDO::FETCH_ASSOC)['cart_exists'];
+
+    if ($cartExists) {
+        $stmtQty = $conn->prepare("SELECT SUM(cart_qty) AS total_quantity FROM tbl_carts WHERE user_email = :useremail");
+        $stmtQty->bindParam(':useremail', $useremail);
+        $stmtQty->execute();
+        $totalQuantity = $stmtQty->fetch(PDO::FETCH_ASSOC)['total_quantity'];
+
+        // Set the $carttotal variable to the retrieved total quantity
+        $carttotal = $totalQuantity ?? 0;
+    } else {
+        $carttotal = 0;
     }
+} else {
+    $carttotal = 0;
+}
 
 ?>
 <!DOCTYPE html>
