@@ -301,6 +301,8 @@ $rows = $stmt->fetchAll();
             background-color: #f2f2f2;
             padding: 20px;
             text-align: center;
+        }
+        .copy_right p{
             font-size:20px;
         }
     </style>
@@ -666,7 +668,7 @@ $rows = $stmt->fetchAll();
             <div class="quicklinks">
                 <h2>Shop</h2>
                 <ul>
-                    <li><a href="#">All</a></li>
+                    <li><a href="booklist.php">All</a></li>
                     <li><a href="#">New Arrival</a></li>
                     <li><a href="#">Best Seller</a></li>
                 </ul>

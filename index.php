@@ -84,7 +84,7 @@ function subString($str){
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
         <script src="js/script.js"></script>
@@ -102,6 +102,7 @@ function subString($str){
                 padding: 20px;
                 background-color: #fff;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                margin-top:20px;
             }
 
             .quicklinks ul,
@@ -305,7 +306,7 @@ function subString($str){
             <div class="quicklinks">
                 <h2>Shop</h2>
                 <ul>
-                    <li><a href="#">All</a></li>
+                    <li><a href="booklist.php">All</a></li>
                     <li><a href="#">New Arrival</a></li>
                     <li><a href="#">Best Seller</a></li>
                 </ul>
@@ -364,6 +365,8 @@ function subString($str){
             });
         }
 </script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

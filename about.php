@@ -269,7 +269,7 @@ $rows = $stmt->fetchAll();
             <div class="quicklinks">
                 <h2>Shop</h2>
                 <ul>
-                    <li><a href="#">All</a></li>
+                    <li><a href="booklist.php#">All</a></li>
                     <li><a href="#">New Arrival</a></li>
                     <li><a href="#">Best Seller</a></li>
                 </ul>

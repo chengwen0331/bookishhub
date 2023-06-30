@@ -81,7 +81,86 @@ if (count($rows) > 0) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
     <link rel="stylesheet" type="text/css" href="bookdetails_style.css">
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <script src="../js/script.js"></script>
+    <style>
+            .footer_info {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-gap: 20px;
+                justify-items: center;
+                align-items: flex-start;
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                margin-top:20px;
+            }
+
+            .quicklinks ul,
+            .contact_info {
+                list-style: none;
+                padding: 0;
+            }
+
+            .quicklinks h2,
+            .contact_us h2 {
+                position: relative;
+                margin-bottom: 15px;
+            }
+            .quicklinks h2:after,
+            .contact_us h2:after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -5px;
+                height: 4px;
+                width: 50px;
+                background-color: #cc2e2e;
+            }
+
+            .quicklinks ul li,
+            .contact_info li {
+                margin-bottom: 10px;
+            }
+
+            .quicklinks ul li a {
+                text-decoration: none;
+                color: #000;
+            }
+            .quicklinks ul li a:hover {
+                text-decoration: underline;
+                color: blue;
+            }
+            .contact_info li {
+                display: flex;
+                margin-bottom: 10px;
+                }
+            .contact_info span {
+                margin-right: 8px;
+                display: flex;
+            }
+
+            .contact_info p {
+                margin: 0;
+                display: flex;
+                align-items: center;
+            }
+            .contact_info li a {
+                text-decoration: none;
+                color: #000;
+            }
+            .contact_info li a:hover {
+                text-decoration: underline;
+                color: blue;
+            }
+            .copy-right {
+                background-color: #f2f2f2;
+                padding: 20px;
+                text-align: center;
+                font-size:20px;
+            }
+        </style>
 </head>
 
 <body>
@@ -150,9 +229,51 @@ if (count($rows) > 0) {
             </div>
         </div>
     </div>
-    <footer class="w3-row-padding w3-padding-32">
-        <p class="w3-center">MyBookDepository&reg;</p>
+    <footer>
+        <div class="footer_info">
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="booklist.php">All</a></li>
+                    <li><a href="#">New Arrival</a></li>
+                    <li><a href="#">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
+                    <li>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
+                    </li>
+                </ul>
+            </div>
+        </div>    
+        <div class="copy-right">
+            <p>
+                Copyright © 2023 | BookishHub®
+            </p>
+        </div>
     </footer>
+
 
     <!-- JavaScript code -->
     <script>
@@ -204,7 +325,8 @@ if (count($rows) > 0) {
             });
         });
     </script>
-    <!--  -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 
 </body>
