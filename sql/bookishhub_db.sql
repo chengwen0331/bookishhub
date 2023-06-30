@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2023 at 08:43 AM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 8.1.10
+-- Generation Time: Jun 30, 2023 at 03:03 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,7 +38,7 @@ CREATE TABLE `tbl_books` (
   `book_lang` varchar(100) NOT NULL,
   `book_qty` int(5) NOT NULL,
   `book_date` datetime(6) NOT NULL DEFAULT current_timestamp(6)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `tbl_books`
@@ -83,7 +83,7 @@ CREATE TABLE `tbl_carts` (
   `book_id` varchar(10) NOT NULL,
   `cart_qty` int(5) NOT NULL,
   `cart_id` int(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `tbl_carts`
@@ -106,7 +106,7 @@ CREATE TABLE `tbl_orders` (
   `order_paid` varchar(10) NOT NULL,
   `order_status` varchar(20) NOT NULL,
   `order_date` datetime(6) NOT NULL DEFAULT current_timestamp(6)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `tbl_orders`
@@ -129,23 +129,40 @@ INSERT INTO `tbl_orders` (`order_receiptid`, `order_bookid`, `order_qty`, `order
 --
 
 CREATE TABLE `tbl_payments` (
-  `payment_id` int(5) NOT NULL,
-  `payment_receipt` varchar(10) NOT NULL,
+  `payment_id` int(11) NOT NULL,
   `payment_email` varchar(50) NOT NULL,
-  `payment_paid` varchar(10) NOT NULL,
-  `payment_date` datetime(6) NOT NULL DEFAULT current_timestamp(6)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `payment_fullname` varchar(100) NOT NULL,
+  `payment_billing_address` varchar(255) NOT NULL,
+  `payment_delivery_address` varchar(255) NOT NULL,
+  `payment_city` varchar(50) NOT NULL,
+  `payment_state` varchar(50) NOT NULL,
+  `payment_zip_code` varchar(10) NOT NULL,
+  `payment_phone_number` varchar(20) NOT NULL,
+  `payment_remark` varchar(200) NOT NULL,
+  `payment_receipt` blob NOT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tbl_payments`
 --
 
-INSERT INTO `tbl_payments` (`payment_id`, `payment_receipt`, `payment_email`, `payment_paid`, `payment_date`) VALUES
-(1, 'nbxhfdn0', 'slumberjer@gmail.com', '35.38', '2022-01-25 21:38:02.652016'),
-(2, '4ij0g0ra', 'slumberjer@gmail.com', '63.31', '2022-01-25 22:25:42.564908'),
-(3, '4mjilyzv', 'rebas49969@rezunz.com', '74.05', '2022-01-25 23:16:46.002060'),
-(4, '0i80ownm', 'rebas49969@rezunz.com', '131.12', '2022-01-25 23:23:24.512251'),
-(5, 'h006tvem', 'rebas49969@rezunz.com', '110.36', '2022-01-25 23:35:22.716674');
+INSERT INTO `tbl_payments` (`payment_id`, `payment_email`, `payment_fullname`, `payment_billing_address`, `payment_delivery_address`, `payment_city`, `payment_state`, `payment_zip_code`, `payment_phone_number`, `payment_remark`, `payment_receipt`, `payment_date`) VALUES
+(1, 'weyaci3235@extemer.com', 'Chong Kai Zhi', 'sdfsdfw', 'efqefqef', 'Chemor', 'state1', '31200', '0182129139', '', 0x7762732e64726177696f2e706e67, '2023-06-29 03:00:50'),
+(2, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '2, lorong ciku 6, tamen mas baru,', '2, lorong ciku 6, tamen mas baru,', 'Chemor', 'state1', '31200', '0182129139', '', 0x7762732e64726177696f2e706e67, '2023-06-29 03:02:21'),
+(3, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '2, lorong ciku 6, tamen mas baru,', '2, lorong ciku 6, tamen mas baru,', 'Chemor', 'state1', '31200', '0182129139', '', 0x7762732e64726177696f2e706e67, '2023-06-29 03:02:58'),
+(4, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '2,lorong ciku 5, taman mas baru,', '2,lorong ciku 5, taman mas baru,', 'Chemor', 'state1', '31200', '0182129139', '', 0x7762732e64726177696f2e706e67, '2023-06-29 03:05:19'),
+(5, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '2,lorong ciku 5, taman mas baru,', '2,lorong ciku 5, taman mas baru,', 'Chemor', 'state1', '31200', '0182129139', '', 0x7762732e64726177696f2e706e67, '2023-06-29 03:12:06'),
+(6, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '3,lorong ciku5, taman mas baru', '3,lorong ciku5, taman mas baru', 'Sintok', 'state2', '06100', '0195486523', '', 0x436f7079206f66204d65726368616e6469736520506f737465722831292e706e67, '2023-06-29 03:14:58'),
+(7, 'weyaci3235@extemer.com', 'Chong Kai Zhi', '3,lorong ciku5, taman mas baru', '3,lorong ciku5, taman mas baru', 'Sintok', 'state2', '06100', '0195486523', '', 0x436f7079206f66204d65726368616e6469736520506f737465722831292e706e67, '2023-06-29 03:21:38'),
+(8, 'weyaci3235@extemer.com', 'Wong Cheng Wen', '7, lorong ciku 4, taman mas baru', '7, lorong ciku 4, taman mas baru', 'Chemor', 'Perak', '31200', '0182129139', '', 0x61626f75742e706e67, '2023-06-29 03:22:55'),
+(9, 'weyaci3235@extemer.com', 'Ooi Hui Yi', '4,lorong ciku 5, taman mas baru', '4,lorong ciku 5, taman mas baru', 'jitra', 'Kedah', '06100', '0195486523', '', 0x4d65726368616e6469736520506f737465722e706e67, '2023-06-29 03:29:10'),
+(10, 'weyaci3235@extemer.com', 'Ooi Hui Yi', 'dsgwq', 'ewg', 'wg', 'Johor', '34567', '0112451263', '', 0x436f7079206f66204f726967616d6920576f726b73686f70204c6561726e696e6720746865204261736973206f66204f726967616d692832292e706e67, '2023-06-29 03:37:21'),
+(11, 'weyaci3235@extemer.com', 'Chong Kai Zhi', 'ewf', 'fge', 'wg', 'Pahang', '31200', '0121231252', '', 0x7762732e64726177696f2e706e67, '2023-06-29 07:20:37'),
+(12, 'weyaci3235@extemer.com', 'Lim Zhi Xing', '1, Lorong Mangga, 7, Taman Mas Baru,', '1, Lorong Mangga, 7, Taman Mas Baru,', 'Sri Petaling', 'Selangor', '34567', '0112451263', '', 0x7069632e706e67, '2023-06-30 04:40:55'),
+(13, 'weyaci3235@extemer.com', 'Wong Cheng Wen', 'sdfgae', 'eagaerg', 'Chemor', 'Perak', '31200', '0182129139', '', 0x77656c636f6d652e6a7067, '2023-06-30 07:23:36'),
+(14, 'weyaci3235@extemer.com', 'Lim Zhi Xing', 'wesdfw', 'wef', 'Chemor', 'Johor', '23456', '0121231252', '', 0x7762732e64726177696f2e706e67, '2023-06-30 07:38:53'),
+(15, 'ch3ngw3n0331@gmail.com', 'Wong Cheng Wen', 'dsfaw', 'asdgfa', 'Sintok', 'Kedah', '06100', '0182129139', 'AEFewf', 0x77656c636f6d652e6a7067, '2023-06-30 11:38:56');
 
 -- --------------------------------------------------------
 
@@ -161,7 +178,7 @@ CREATE TABLE `tbl_users` (
   `user_password` varchar(40) NOT NULL,
   `user_regdate` datetime(6) NOT NULL DEFAULT current_timestamp(6),
   `user_otp` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `tbl_users`
@@ -172,7 +189,9 @@ INSERT INTO `tbl_users` (`user_id`, `user_phone`, `user_name`, `user_email`, `us
 (2, '0123456789', 'Rebas', 'rebas49969@rezunz.com', '6367c48dd193d56ea7b0baad25b19455e529f5ee', '2022-01-13 00:00:00.000000', '1'),
 (3, '0124033342', 'Lim Zhi Xing', 'lzx0028@gmail.com', 'd052f85fa58fb0497ad4bb7f2d069dd486c4a9aa', '2023-06-17 22:21:13.186596', '22222'),
 (4, '0123456789', 'Gedika', 'gedika3488@anwarb.com', '3f745fbde88d961831d94c2e0bc8f5832a97c63b', '2023-06-18 00:46:47.715624', '1'),
-(5, '0129876543', 'Golowa', 'golowa8125@aaorsi.com', '4fa078779d5769efecf3784fec9f6b484cc178c0', '2023-06-18 14:18:43.291887', '1');
+(5, '0129876543', 'Golowa', 'golowa8125@aaorsi.com', '4fa078779d5769efecf3784fec9f6b484cc178c0', '2023-06-18 14:18:43.291887', '1'),
+(9, '0182129139', 'Chengwenn', 'ch3ngw3n0331@gmail.com', '621e1bda81ed0a448246aad7d157227da1084bba', '2023-06-28 00:33:27.177327', '56068'),
+(10, '0132459625', 'kaizhi', 'weyaci3235@extemer.com', 'bb8933d75e560b0c73868154d6aeb68e5d07e4d1', '2023-06-28 00:46:49.095787', '1');
 
 --
 -- Indexes for dumped tables
@@ -194,8 +213,7 @@ ALTER TABLE `tbl_carts`
 -- Indexes for table `tbl_payments`
 --
 ALTER TABLE `tbl_payments`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD UNIQUE KEY `payment_receipt` (`payment_receipt`);
+  ADD PRIMARY KEY (`payment_id`);
 
 --
 -- Indexes for table `tbl_users`
@@ -218,19 +236,19 @@ ALTER TABLE `tbl_books`
 -- AUTO_INCREMENT for table `tbl_carts`
 --
 ALTER TABLE `tbl_carts`
-  MODIFY `cart_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `cart_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `tbl_payments`
 --
 ALTER TABLE `tbl_payments`
-  MODIFY `payment_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
