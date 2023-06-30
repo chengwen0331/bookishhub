@@ -9,6 +9,9 @@ if (isset($_SESSION['sessionid'])) {
     sendJsonResponse($response);
     return;
 }
+$bookid = '';
+$cartqty = 0;
+$carttotal = 0;
 if (isset($_GET['submit'])) {
     $bookid = $_GET['bookid'];
     $bookprice = $_GET['bookprice'];
@@ -25,15 +28,18 @@ if (isset($_GET['submit'])) {
         $cartqty = $bookcurqty + 1 ;
         $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
         $conn->exec($updatecart);
+        echo "<script>alert('Cart updated')</script>";
     }
     if ($_GET['submit'] == "remove"){
         if ($bookcurqty == 1){
             $updatecart = "DELETE FROM `tbl_carts` WHERE user_email = '$useremail' AND book_id = '$bookid'";
             $conn->exec($updatecart);
+            echo "<script>alert('Book removed')</script>";
         }else{
             $cartqty = $bookcurqty - 1 ;
             $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
             $conn->exec($updatecart);    
+            echo "<script>alert('Removed')</script>";
         }
     }
 }
@@ -44,6 +50,7 @@ $stmtqty->execute();
 //$resultqty = $stmtqty->setFetchMode(PDO::FETCH_ASSOC);
 $rowsqty = $stmtqty->fetchAll();
 $totalpayable = 0;
+
 foreach ($rowsqty as $carts) {
    $carttotal = $carts['cart_qty'] + $carttotal;
    $bookpr = $carts['book_price'] * $carts['cart_qty'];

@@ -3,6 +3,43 @@ include_once("dbconnect.php");
 include "menu.php";
 $bookid = $_GET['bookid'];
 
+if (isset($_GET['submit']) && $_GET['submit'] == "cart" && isset($_GET['bookid']) && isset($_GET['bookqty'])) {
+    if ($useremail != "Guest") {
+        $bookid = $_GET['bookid'];
+        $bookqty = $_GET['bookqty'];
+
+        // Check if the book is already in the cart
+        $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
+        $stmt->execute();
+        $number_of_rows = $stmt->rowCount();
+        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll();
+
+        if ($number_of_rows > 0) {
+            foreach ($rows as $carts) {
+                $cartqty = $carts['cart_qty'];
+            }
+            $cartqty += $bookqty;
+            $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
+            $conn->exec($updatecart);
+            echo "<script>alert('Cart updated')</script>";
+            echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
+        } else {
+            $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$bookqty')";
+            try {
+                $conn->exec($addcart);
+                echo "<script>alert('Success')</script>";
+                echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
+            } catch (PDOException $e) {
+                echo "<script>alert('Failed')</script>";
+            }
+        }
+    } else {
+        echo "<script>alert('Please login or register')</script>";
+        echo "<script>window.location.replace('login.php')</script>";
+    }
+}
+
 // Use prepared statements to prevent SQL injection
 $sqlquery = "SELECT * FROM tbl_books WHERE book_id = :bookid";
 $stmt = $conn->prepare($sqlquery);
@@ -89,25 +126,25 @@ if (count($rows) > 0) {
                 <p style='ext-align: justify;'>$book_description</p>
             
                 <p style='font-size:160%; color:rgb(19, 96, 174); font-weight: 900; padding: 10px 0px 10px 0px;'>RM $book_price</p>
-                
-                <div class='w3-col w3-margin-bottom'>
-                    <label class='w3-col mb-2 d-block' style='color:rgb(19, 96, 174); font-weight: 900;'>Quantity</label>
-              
-                    <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
-                        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
-                            <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
-                        </button>
-                        <input type='text' id='quantity-input' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
-                        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
-                            <i class='fa fa-plus'></i>
-                        </button>
-                    </div>
-                </div>
+               <div class='w3-col w3-margin-bottom'>
+    <label class='w3-col mb-2 d-block' style='color:rgb(19, 96, 174); font-weight: 900;'>Quantity</label>
+    <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
+        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
+            <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
+        </button>
+        <input type='text' id='quantity-input' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
+        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
+            <i class='fa fa-plus'></i>
+        </button>
+    </div>
+</div>
 
-                <p> <a href='index.php?bookid=<?php echo $bookid ?>&submit=cart&quantity=' + quantity class='w3-button w3-round-small' style='background-color: #3286AA; color: white;' id='add-to-cart-button'>
-                <i class='fas fa-cart-plus'></i> Add to cart
-                </a>
-                <p><br> 
+<p>
+    <a href='submit.php?bookid=<?php echo $bookid; ?>&submit=cart&bookqty=' + quantityInput.value' class='w3-button w3-round-small' style='background-color: #3286AA; color: white;' id='add-to-cart-button'>
+    <i class='fas fa-cart-plus'></i> Add to cart
+</a>
+
+</p>
             ";
                 ?>
             </div>
@@ -124,6 +161,7 @@ if (count($rows) > 0) {
             // Get the quantity input and add event listeners
             var quantityInput = document.getElementById('quantity-input');
             var addToCartButton = document.getElementById('add-to-cart-button');
+            var bookid = '<?php echo $bookid; ?>'; // Get the bookid value from PHP
 
             // Set the initial quantity value
             var quantity = 1;
@@ -131,7 +169,7 @@ if (count($rows) > 0) {
 
             // Function to update the URL of the "Add to Cart" button
             function updateCartURL() {
-                addToCartButton.href = "index.php?bookid=<?php echo $bookid ?>&submit=cart&quantity=" + quantity;
+                addToCartButton.href = "bookdetails.php?bookid=" + bookid + "&submit=cart&bookqty=" + quantity;
             }
 
             // Add event listener for the plus button
@@ -163,15 +201,10 @@ if (count($rows) > 0) {
                     e.preventDefault();
                     return;
                 }
-
-                // Delay the page redirect to ensure the button URL is updated
-                setTimeout(function() {
-                    window.location.href = addToCartButton.href;
-                }, 100);
             });
         });
     </script>
-    <!-- fasfgsdf -->
+    <!--  -->
 
 
 </body>

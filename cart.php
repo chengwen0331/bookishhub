@@ -55,14 +55,7 @@ foreach ($rowsqty as $carts) {
    $carttotal = $carts['cart_qty'] + $carttotal;
 }
 
-function subString($str){
-    if (strlen($str) > 15){
-        return $substr = substr($str, 0, 15) . '...';
-    }
-    else{
-        return $str;
-    }
-}
+
 
 ?>
 
@@ -127,7 +120,7 @@ function subString($str){
              $total_payable = 0.00;
                 foreach ($rowsqty as $books){
                     $bookid = $books['book_id'];
-                    $book_title = subString($books['book_title']);
+                    $book_title = $books['book_title'];
                     $book_isbn = $books['book_isbn'];
                     $book_price = $books['book_price'];
                     $book_qty = $books['cart_qty'];
@@ -142,15 +135,13 @@ function subString($str){
                     <input type='button' class='add-button' id='button_id' value='+' onClick='addCart($bookid,$book_price);'></div>
                     <br>
 
-                    <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
-                        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
+                    <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
                             <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
                         </button>
                         <input type='text' id='quantity-input' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
                         <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
                             <i class='fa fa-plus'></i>
-                        </button>
-                    </div>
+                    </button>
                     <b><label id='bookprid_$bookid'> Price: RM $book_total</label></b><br></div></div>";
                 }
              ?>
@@ -241,7 +232,6 @@ function removeCart(bookid, book_price) {
         }
     });
 }
-
 </script>
 </body>
 </html>
