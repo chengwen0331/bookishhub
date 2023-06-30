@@ -1,7 +1,7 @@
 <?php
 include_once("dbconnect.php");
 session_start();
-$carttotal = isset($_SESSION['carttotal']) ? $_SESSION['carttotal'] : 0;
+
 $useremail = "Guest";
 $user_name = "Guest";
 $user_phone = "-";
@@ -10,7 +10,15 @@ if (isset($_SESSION['sessionid'])) {
     $useremail = $_SESSION['user_email'];
     $user_name = $_SESSION['user_name'];
     $user_phone = $_SESSION['user_phone'];
-}
+    $stmtQty = $conn->prepare("SELECT SUM(cart_qty) AS total_quantity FROM tbl_carts WHERE user_email = :useremail");
+    $stmtQty->bindParam(':useremail', $useremail);
+    $stmtQty->execute();
+    $totalQuantity = $stmtQty->fetch(PDO::FETCH_ASSOC)['total_quantity'];
+
+    // Set the $carttotal variable to the retrieved total quantity
+    $carttotal = $totalQuantity ?? 0;
+    }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,11 +92,14 @@ if (isset($_SESSION['sessionid'])) {
         </div>
         <nav class="navb" style="font-size:20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
             <a href="index.php" class="navb-link">Home</a>
-            <a href="#" class="navb-link">Books</a>
+            <a href="booklist.php" class="navb-link">Books</a>
             <a href="about.php" class="navb-link">About</a>
             <a href="faqs.php" class="navb-link">FAQs</a>
             <a href="contactus.php" class="navb-link">Contact</a>
         </nav>
     </header>
+
     </body>
 </html>
+
+                   

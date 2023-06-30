@@ -43,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       try {
          $conn->exec($sql);
          sendMail($email);
+         $clearCartSql = "DELETE FROM `tbl_carts` WHERE user_email = '$email_add'";
+        $conn->exec($clearCartSql);
          echo "<script>alert('Payment successfully')</script>";
          echo "<script>window.location.replace('index.php')</script>";
      }catch (PDOException $e) {
@@ -374,7 +376,7 @@ function sendMail($recipientEmail){
                                     <div class='w3-card w3-round-large'>
                                        <div class='w3-padding-small'>
                                              <a href='book_details.php?bookid=$bookId'>
-                                                <img class='w3-container w3-image' src='../images/books/$bookId.jpg' onerror='this.onerror=null;this.src='../images/books/default.jpg''>
+                                                <img class='w3-container w3-image' src='images/$bookId.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='max-height:150px; max-width:180px;'>
                                              </a>
                                        </div>
                                        <div>$bookTitle</div>
@@ -469,8 +471,7 @@ function sendMail($recipientEmail){
     </footer>
     <script>
       function cancelOrder() {
-         // Redirect back to index.php
-         window.location.href = 'index.php';
+         window.location.href = 'cart.php';
       }
    </script>           
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
