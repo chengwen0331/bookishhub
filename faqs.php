@@ -2,8 +2,8 @@
 include_once("dbconnect.php");
 include "menu.php";
 
-if (isset($_GET['submit'])) {
-    include_once("dbconnect.php");
+/*if (isset($_GET['submit'])) {
+    //include_once("dbconnect.php");
     if ($_GET['submit'] == "cart") {
         if ($useremail == "Guest") {
             echo "<script>alert('Please login or register')</script>";
@@ -20,7 +20,7 @@ if (isset($_GET['submit'])) {
 
 $stmt = $conn->prepare($sqlquery);
 $stmt->execute();
-$rows = $stmt->fetchAll();
+$rows = $stmt->fetchAll();*/
 
 ?>
 

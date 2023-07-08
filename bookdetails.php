@@ -8,30 +8,49 @@ if (isset($_GET['submit']) && $_GET['submit'] == "cart" && isset($_GET['bookid']
         $bookid = $_GET['bookid'];
         $bookqty = $_GET['bookqty'];
 
-        // Check if the book is already in the cart
-        $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
-        $stmt->execute();
-        $number_of_rows = $stmt->rowCount();
-        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $rows = $stmt->fetchAll();
+        if ($bookqty == '') {
+            $bookqty = 1;
+        } else {
+            $bookqty = $bookqty;
+        }
 
-        if ($number_of_rows > 0) {
-            foreach ($rows as $carts) {
-                $cartqty = $carts['cart_qty'];
-            }
-            $cartqty += $bookqty;
-            $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
-            $conn->exec($updatecart);
-            echo "<script>alert('Cart updated')</script>";
+        // Retrieve the quantity available for the book from the database
+        $stmt = $conn->prepare("SELECT book_qty FROM tbl_books WHERE book_id = '$bookid'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $quantityAvailable = $result['book_qty'];
+
+        // Check if the added quantity exceeds the quantity available
+        if ($bookqty > $quantityAvailable) {
+            echo "<script>alert('Quantity exceeds availability')</script>";
             echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
         } else {
-            $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$bookqty')";
-            try {
-                $conn->exec($addcart);
-                echo "<script>alert('Success')</script>";
+            // Check if the book is already in the cart
+            $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
+            $stmt->execute();
+            $number_of_rows = $stmt->rowCount();
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll();
+
+            if ($number_of_rows > 0) {
+                foreach ($rows as $carts) {
+                    $cartqty = $carts['cart_qty'];
+                }
+                $cartqty += intval($bookqty);
+
+                $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
+                $conn->exec($updatecart);
+                echo "<script>alert('Cart updated')</script>";
                 echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
-            } catch (PDOException $e) {
-                echo "<script>alert('Failed')</script>";
+            } else {
+                $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$bookqty')";
+                try {
+                    $conn->exec($addcart);
+                    echo "<script>alert('Success')</script>";
+                    echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
+                } catch (PDOException $e) {
+                    echo "<script>alert('Failed')</script>";
+                }
             }
         }
     } else {
@@ -77,90 +96,117 @@ if (count($rows) > 0) {
     <title>BookishHub</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-    <link rel="stylesheet" type="text/css" href="bookdetails_style.css">
+    <link rel="stylesheet" type="text/css" href="css/bookdetails_style.css">
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <script src="../js/script.js"></script>
     <style>
-            .footer_info {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                grid-gap: 20px;
-                justify-items: center;
-                align-items: flex-start;
-                padding: 20px;
-                background-color: #fff;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-                margin-top:20px;
-            }
+        .footer_info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
 
-            .quicklinks ul,
-            .contact_info {
-                list-style: none;
-                padding: 0;
-            }
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
 
-            .quicklinks h2,
-            .contact_us h2 {
-                position: relative;
-                margin-bottom: 15px;
-            }
-            .quicklinks h2:after,
-            .contact_us h2:after {
-                content: "";
-                position: absolute;
-                left: 0;
-                bottom: -5px;
-                height: 4px;
-                width: 50px;
-                background-color: #cc2e2e;
-            }
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
 
-            .quicklinks ul li,
-            .contact_info li {
-                margin-bottom: 10px;
-            }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
 
-            .quicklinks ul li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .quicklinks ul li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .contact_info li {
-                display: flex;
-                margin-bottom: 10px;
-                }
-            .contact_info span {
-                margin-right: 8px;
-                display: flex;
-            }
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
 
-            .contact_info p {
-                margin: 0;
-                display: flex;
-                align-items: center;
-            }
-            .contact_info li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .contact_info li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .copy-right {
-                background-color: #f2f2f2;
-                padding: 20px;
-                text-align: center;
-                font-size:20px;
-            }
-        </style>
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .cartbutton {
+            padding: 8px;
+            background-color: #3286AA;
+            color: aliceblue;
+            font-size: medium;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px !important;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .cartbutton:hover {
+            background-color: #2c7291;
+        }
+    </style>
 </head>
 
 <body>
@@ -169,7 +215,7 @@ if (count($rows) > 0) {
 
         <div class="w3-row w3-card">
             <div class="w3-half w3-center">
-                <img class="w3-image w3-margin w3-center" style="height:100%;width:100%;max-width:330px; padding:20px 0px 0px 0px" src="images/<?php echo $bookid ?>.jpg">
+                <img class="w3-image w3-margin w3-center" style="height:100%;width:100%;max-width:330px; padding:20px 0px 0px 0px" src="images/books/<?php echo $bookid ?>.jpg">
             </div>
             <div class="w3-half w3-container">
                 <?php
@@ -196,7 +242,7 @@ if (count($rows) > 0) {
                     </tr>
                     <tr>
                         <td class='custom-table-row'>Quantity Available</td>
-                        <td>$book_qty</td>
+                        <td id='qtyAvailable'>$book_qty</td>
                     </tr>
                 </table>
                 </div>
@@ -204,22 +250,22 @@ if (count($rows) > 0) {
                 <p style='color:rgb(19, 96, 174); font-weight: 900;'>Description<p/>
                 <p style='ext-align: justify;'>$book_description</p>
             
-                <p style='font-size:160%; color:rgb(19, 96, 174); font-weight: 900; padding: 10px 0px 10px 0px;'>RM $book_price</p>
+                <p style='font-size:160%; color:rgb(19, 96, 174); font-weight: 900; padding: 10px 0px 10px 0px;'>RM " . number_format($book_price, 2) . "</p>
                <div class='w3-col w3-margin-bottom'>
     <label class='w3-col mb-2 d-block' style='color:rgb(19, 96, 174); font-weight: 900;'>Quantity</label>
     <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
         <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
             <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
         </button>
-        <input type='text' id='quantity-input' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
+        <input type='text' id='quantity-input' value='1' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
         <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
             <i class='fa fa-plus'></i>
         </button>
     </div>
 </div>
-
+        
 <p>
-    <a href='submit.php?bookid=<?php echo $bookid; ?>&submit=cart&bookqty=' + quantityInput.value' class='w3-button w3-round-small' style='background-color: #3286AA; color: white;' id='add-to-cart-button'>
+    <a href='bookdetails.php?bookid=$bookid&submit=cart&bookqty=' + quantityInput.value' class='cartbutton w3-round-small' id='add-to-cart-button'>
     <i class='fas fa-cart-plus'></i> Add to cart
 </a>
 
@@ -229,6 +275,7 @@ if (count($rows) > 0) {
             </div>
         </div>
     </div>
+
     <footer>
         <div class="footer_info">
             <div class="quicklinks">
@@ -266,7 +313,7 @@ if (count($rows) > 0) {
                     </li>
                 </ul>
             </div>
-        </div>    
+        </div>
         <div class="copy-right">
             <p>
                 Copyright © 2023 | BookishHub®
@@ -284,21 +331,28 @@ if (count($rows) > 0) {
             var addToCartButton = document.getElementById('add-to-cart-button');
             var bookid = '<?php echo $bookid; ?>'; // Get the bookid value from PHP
 
+            // Function to update the URL of the "Add to Cart" button
+            function updateCartURL() {
+                var quantity = parseInt(quantityInput.value); // Get the current quantity value
+                addToCartButton.href = "bookdetails.php?bookid=" + bookid + "&submit=cart&bookqty=" + quantity;
+            }
+
             // Set the initial quantity value
             var quantity = 1;
             quantityInput.value = quantity;
 
-            // Function to update the URL of the "Add to Cart" button
-            function updateCartURL() {
-                addToCartButton.href = "bookdetails.php?bookid=" + bookid + "&submit=cart&bookqty=" + quantity;
-            }
-
             // Add event listener for the plus button
             document.getElementById('button-addon2').addEventListener('click', function() {
                 // Increment the quantity by 1
-                quantity += 1;
-                quantityInput.value = quantity;
+                var currentqty = parseInt(quantityInput.value);
+                var newqty = currentqty + 1;
+                quantityInput.value = newqty;
+                var quantityAvailable = parseInt(document.getElementById('qtyAvailable').textContent);
 
+                if (newqty > quantityAvailable) {
+                    alert("Quantity exceeds availability");
+                    quantityInput.value = currentqty;
+                }
                 // Update the "Add to Cart" button URL
                 updateCartURL();
             });
@@ -306,9 +360,10 @@ if (count($rows) > 0) {
             // Add event listener for the minus button
             document.getElementById('button-addon1').addEventListener('click', function() {
                 // Decrement the quantity by 1, minimum value is 1
-                if (quantity > 1) {
-                    quantity -= 1;
-                    quantityInput.value = quantity;
+                var currentqty = parseInt(quantityInput.value);
+                if (currentqty > 1) {
+                    var newqty = currentqty - 1;
+                    quantityInput.value = newqty;
 
                     // Update the "Add to Cart" button URL
                     updateCartURL();
@@ -326,7 +381,7 @@ if (count($rows) > 0) {
         });
     </script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 
 </body>

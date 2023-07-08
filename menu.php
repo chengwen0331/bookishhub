@@ -32,10 +32,20 @@ if (isset($_SESSION['sessionid'])) {
     $carttotal = 0;
 }
 
+if (isset($_GET['submit'])) {
+    include_once("dbconnect.php");
+    if ($_GET['submit'] == "cart") {
+        if ($useremail == "Guest") {
+            echo "<script>alert('Please login or register')</script>";
+            echo "<script> window.location.replace('login.php')</script>";
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html>
-    <head>    
+    <head>
         <title>BookishHub</title>
         <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
         <meta charset="UTF-8">
@@ -50,8 +60,14 @@ if (isset($_SESSION['sessionid'])) {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-    </head> 
-<body>
+        <style>
+            .navb {
+                font-size: 20px !important;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            }
+        </style>
+    </head>
+    <body>
     <header>
         <div class="p-3 text-center bg-white border-bottom">
             <div class="container">
@@ -63,20 +79,22 @@ if (isset($_SESSION['sessionid'])) {
                     </div>
 
                     <div class="col-lg-4 col-sm-6 col-6" style="margin-left: 80px;">
-                        <div class="input-group">
-                            <input type="search" id="form1" class="form-control" placeholder="Search" />
-                            <label class="form-label visually-hidden" for="form1">Search</label>
-                            <button type="button" class="btn shadow-0" style="background-color:#3286AA; color:white;">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                        <form action="booklist.php" method="GET">
+                            <div class="input-group">
+                                <input type="search" id="form1" class="form-control" placeholder="Search..." name="search" />
+                                <label class="form-label visually-hidden search" for="form1">Search</label>
+                                <button type="submit" class="btn shadow-0" style="background-color:#3286AA; color:white;">
+                                    <i class="fas fa-search" style="color: white;"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <div class="order-lg-last col-lg-5 col-sm-8 col-8">
                         <div class="d-flex justify-content-end">
-                            <a href="cart.php" class="icon-hover border rounded py-1 px-3 nav-link d-flex align-items-center">
+                            <a href="cart.php" class="icon-hover border rounded py-1 px-3 nav-link d-flex align-items-center" style="margin-right: 5px;">
                                 <i class="fas fa-shopping-cart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">My cart (<?php echo $carttotal?>)</p>
+                                <p class="d-none d-md-block mb-0">My cart (<span id="cartTotal"><?php echo $carttotal ?></span>)</p> 
                             </a>
                             <?php if ($useremail == "Guest") { ?>
                                 <a href="register.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
@@ -88,16 +106,16 @@ if (isset($_SESSION['sessionid'])) {
                                     <p class="d-none d-md-block mb-0">Login</p>
                                 </a>
                             <?php } else { ?>
-                                <a href="#" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
+                                <a href="profile.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                                     <i class="fas fa-user-circle m-1 me-md-2"></i>
-                                    <p class="d-none d-md-block mb-0">Profile</p>
+                                    <p class="d-none d-md-block mb-0">My Account</p>
                                 </a>
                                 <a href="logout.php" class="icon-hover me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                                     <i class="fas fa-sign-out-alt m-1 me-md-2"></i>
                                     <p class="d-none d-md-block mb-0">Logout</p>
                                 </a>
                             <?php } ?>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -112,7 +130,6 @@ if (isset($_SESSION['sessionid'])) {
         </nav>
     </header>
 
-    </body>
-</html>
+</body>
 
-                   
+</html>              

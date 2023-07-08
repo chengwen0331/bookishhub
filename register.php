@@ -84,6 +84,7 @@ function sendMail($email,$otp){
         <title>BookishHub</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
         <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -170,17 +171,26 @@ function sendMail($email,$otp){
                 text-align: center;
                 font-size:20px;
             }
+            .terms {
+              color: #0061C2;
+              text-decoration: none;
+            }
+
+            .terms:hover {
+              color: #004891;
+              text-decoration: underline;
+            }
         </style>
     </head> 
 <body>
-    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:50px">
+  <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:50px">
       <div class="w3-row w3-card">
-        <div class="w3-half w3-container" style="margin-top: 130px; margin-bottom:50px;display: flex; justify-content: center; align-items: center;"> 
+        <div class="w3-half w3-container" style="margin-top: 130px; margin-bottom:50px;display: flex; justify-content: center; align-items: center;">
           <img class="w3-image w3-padding" style="width:100%; height:100%;object-fit:cover; text-align: center;" src="images/register.jpg">
         </div>
         <div class="w3-half w3-container" style="margin-top: 50px; margin-bottom:50px;">
-               <h4 style="font-size: 40px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; margin-bottom:40px;">Register New Account</h4>
-          <form name="registerForm" class=""  action="register.php" method="post">
+          <h4 style="font-size: 40px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; margin-bottom:40px;">Register New Account</h4>
+          <form name="registerForm" class="" action="register.php" method="post">
             <p>
               <label style="color: #004891;">
                 <b style="margin-top: 10px;">Name</b>
@@ -194,7 +204,7 @@ function sendMail($email,$otp){
               <input class="w3-input w3-border w3-round" name="phone" type="phone" id="idphone" value="<?php echo isset($phone) ? $phone : ''; ?>" required>
             </p>
             <p>
-            <label style="color: #004891;">
+              <label style="color: #004891;">
                 <b style="margin-top: 10px;">Email</b>
               </label>
               <input class="w3-input w3-border w3-round" name="email" type="email" id="idemail" value="<?php echo isset($email) ? $email : ''; ?>" required>
@@ -203,32 +213,32 @@ function sendMail($email,$otp){
               <label style="color: #004891;">
                 <b style="margin-top: 10px;">Password</b>
               </label>
-              <div class="input-group">
-                <input class="w3-input w3-border w3-round" name="password" type="password" id="idpass" value="<?php echo isset($password) ? $password : ''; ?>" required>
-                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('idpass', 'togglePassword')">
-                  <i class="far fa-eye" id="togglePassword" style="cursor: pointer;"></i>
-                </button>
-              </div>
+            <div class="input-group">
+              <input class="w3-input w3-border w3-round" name="password" type="password" id="idpass" value="<?php echo isset($password) ? $password : ''; ?>" required>
+              <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('idpass', 'togglePassword')">
+                <i class="far fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+              </button>
+            </div>
             </p>
             <p>
               <label style="color: #004891;">
                 <b style="margin-top: 10px;">Confirm Password</b>
               </label>
-              <div class="input-group">
-                <input class="w3-input w3-border w3-round" name="passwordb" type="password" id="idpassb" value="<?php echo isset($passwordb) ? $passwordb : ''; ?>" required>
-                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('idpassb', 'togglePasswordb')">
-                  <i class="far fa-eye" id="togglePasswordb" style="cursor: pointer;"></i>
-                </button>
-              </div>
+            <div class="input-group">
+              <input class="w3-input w3-border w3-round" name="passwordb" type="password" id="idpassb" value="<?php echo isset($passwordb) ? $passwordb : ''; ?>" required>
+              <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('idpassb', 'togglePasswordb')">
+                <i class="far fa-eye" id="togglePasswordb" style="cursor: pointer;"></i>
+              </button>
+            </div>
             </p>
             <p>
-            <input class="w3-check" style="margin-top: 10px;" type="checkbox" id="idtnc" name="tnc" value="1" <?php echo isset($_POST['tnc']) && $_POST['tnc'] == '1' ? 'checked' : ''; ?>>
-                <label><a href="#" style="color:black;">Read Terms & Conditions</a></label>
-            </p>            
-            <p>
-            <button class="button w3-btn w3-round w3-block" style="margin-top: 30px;" name="submit" value="register">Register</button>
+              <input class="w3-check" style="margin-top: 10px;" type="checkbox" id="idtnc" name="tnc" value="1" <?php echo isset($_POST['tnc']) && $_POST['tnc'] == '1' ? 'checked' : ''; ?>>
+              <label>This is procted by <a href="terms_of_service.php" class="terms">Terms of Service</a> and <a href="privacy_policy.php" class="terms">Privacy Policy</a></label>
             </p>
-            <p style="margin-top: 30px; font-size:medium;">Already registered?  <a href="login.php" style="text-decoration:none;"> Login here.</a><br>
+            <p>
+              <button class="button w3-btn w3-round w3-block" style="margin-top: 30px;" name="submit" value="register">Register</button>
+            </p>
+            <p style="margin-top: 30px; font-size:medium;">Already registered? <a href="login.php" class="terms"> Login here.</a><br>
             </p>
           </form>
         </div>
@@ -251,8 +261,8 @@ function sendMail($email,$otp){
         }
       }
     </script>
-
-<footer>
+    <br><br>
+    <footer>
         <div class="footer_info">
             <div class="quicklinks">
                 <h2>Quick Links</h2>

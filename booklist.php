@@ -15,17 +15,87 @@ if (isset($_SESSION['sessionid'])) {
     $user_phone = $_SESSION['user_phone'];
 }
 
-// Database query to fetch all books
-$sqlquery = "SELECT * FROM tbl_books";
-$stmt = $conn->prepare($sqlquery);
-$stmt->execute();
-$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$books = []; // Initialize $books as an empty array
+
+// Database query to fetch relevant books based on the search keyword
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+
+    if ($search != "") {
+        $sqlsearch = "SELECT * FROM tbl_books 
+                      WHERE book_title LIKE :search
+                      OR book_author LIKE :search
+                      OR book_isbn LIKE :search
+                      OR book_price LIKE :search
+                      OR book_description LIKE :search
+                      OR book_pub LIKE :search
+                      OR book_lang LIKE :search";
+
+        $stmt = $conn->prepare($sqlsearch);
+        $stmt->bindValue(':search', '%' . $search . '%');
+        $stmt->execute();
+        
+        if ($stmt->rowCount() > 0) {
+            $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+    } else {
+        echo "<script>alert('Please enter the search keyword.');</script>";
+        // Database query to fetch all books
+        $sqlquery = "SELECT * FROM tbl_books";
+        $stmt = $conn->prepare($sqlquery);
+        $stmt->execute();
+        $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} else {
+    // Database query to fetch all books
+    $sqlquery = "SELECT * FROM tbl_books";
+    $stmt = $conn->prepare($sqlquery);
+    $stmt->execute();
+    $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+if (isset($_GET['submit']) && $_GET['submit'] == "cart") {
+    if ($useremail != "Guest"){
+        $bookid = $_GET['bookid'];
+        $cartqty = "1";
+        $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
+        $stmt->execute();
+        $number_of_rows = $stmt->rowCount();
+        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll();
+        if ($number_of_rows > 0){
+            foreach ($rows as $carts){
+                $cartqty = $carts['cart_qty'];
+            }
+            $cartqty = $cartqty + 1;
+            $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
+            $conn->exec($updatecart);
+            echo "<script>alert('Cart updated')</script>";
+            echo "<script> window.location.replace('booklist.php')</script>";
+        }
+        else{
+            $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$cartqty')";
+            try{
+                $conn->exec($addcart);
+                echo "<script>alert('Success')</script>";
+                echo "<script> window.location.replace('booklist.php')</script>";
+            }
+            catch(PDOException $e){
+                echo "<script>alert('Failed')</script>";
+            }
+        }
+    }
+    else{
+        echo "<script>alert('Please login or register')</script>";
+        echo "<script> window.location.replace('login.php')</script>";
+    }
+}
 
 // Function to truncate a string if it exceeds a certain length
 function subString($str)
 {
-    if (strlen($str) > 30) {
-        return $substr = substr($str, 0, 25) . '...';
+    if (strlen($str) > 20) {
+        return $substr = substr($str, 0, 20) . '...';
     } else {
         return $str;
     }
@@ -62,6 +132,24 @@ function subString($str)
         .book-title a:hover {
             color: #3286AA;
             text-decoration: underline;
+        }
+
+        .cartbutton {
+            padding: 8px;
+            background-color: #3286AA;
+            color: aliceblue;
+            font-size: medium;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px !important;
+            max-width: 200px;
+        }
+
+        .cartbutton:hover {
+            background-color: #2c7291;
         }
 
         /* Book List Styles */
@@ -225,6 +313,9 @@ function subString($str)
             <p style="font-size: 36px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
                 Welcome <?php echo $user_name; ?> !
             </p>
+            <?php if (count($books) == 0 && !empty($search)) {
+                echo '<div class="alert alert-danger"><em>The keyword "'.$search.'" is not found. Please try again.</em></div>';
+            }?>
         </div>
     </div>
 
@@ -249,18 +340,17 @@ function subString($str)
 
                 // Displaying book information in a card format with a link to details page
                 echo "
-                <div class='w3-center w3-padding-small' style='min-height:350px'>
+                <div class='w3-center w3-padding-small' style='min-height:380px;'>
                     <div class='w3-card w3-round-large'>
                         <div class='w3-padding-small'>
-                            <img class='w3-container w3-image' src='images/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px'>
+                            <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
                         </div>
                         <div class='w3-description'>
-                        <h6 class='book-title'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
-                                        <p>RM $book_price / $book_qty avail</p>
-                            <a href='index.php?bookid=$bookid&submit=cart' class='w3-button w3-round-small' style='background-color: #3286AA; color: white;'>
-                            <i class='fas fa-cart-plus'></i> Add to cart
-                        </a>
-
+                        <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                            <p>RM " . number_format($book_price, 2) . " / $book_qty avail</p>
+                            <a href='booklist.php?bookid=$bookid&submit=cart' class='cartbutton w3-round-small' style='margin-bottom: auto;'>
+                                <i class='fas fa-cart-plus'></i> Add to cart
+                            </a>
                         </div>
                     </div>
                 </div>";
@@ -268,6 +358,7 @@ function subString($str)
             ?>
         </div>
     </div>
+    
     <footer>
         <div class="footer_info">
             <div class="quicklinks">

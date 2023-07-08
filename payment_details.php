@@ -49,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
          echo "<script>window.location.replace('index.php')</script>";
      }catch (PDOException $e) {
          echo "<script>alert('Error: Payment failed')</script>";
-         echo "<script>window.location.replace('payment_details.php')</script>";
+         //echo "<script>window.location.replace('payment_details.php')</script>";
+         echo "<script>window.location.replace('payment_details.php?email='.$email_add.'&amount='.$amount)</script>";
      }
    } 
    else {
@@ -101,6 +102,7 @@ function sendMail($recipientEmail){
    <title>Bookish Hub</title>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -376,7 +378,7 @@ function sendMail($recipientEmail){
                                     <div class='w3-card w3-round-large'>
                                        <div class='w3-padding-small'>
                                              <a href='book_details.php?bookid=$bookId'>
-                                                <img class='w3-container w3-image' src='images/$bookId.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='max-height:150px; max-width:180px;'>
+                                                <img class='w3-container w3-image' src='images/books/$bookId.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='max-height:150px; max-width:180px;'>
                                              </a>
                                        </div>
                                        <div>$bookTitle</div>

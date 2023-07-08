@@ -42,13 +42,9 @@ if (isset($_GET['submit'])) {
             echo "<script> window.location.replace('login.php')</script>";
         }
     }
-    if ($_GET['submit'] == "search") {
-        $search = $_GET['search'];
-        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
-    }
 } 
 else {
-    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
+    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_date DESC LIMIT 10";
 }
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail'");
@@ -82,6 +78,7 @@ function subString($str){
         <title>BookishHub</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -168,6 +165,46 @@ function subString($str){
                 text-align: center;
                 font-size:20px;
             }
+            .book-title a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 19px;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+
+        .book-title a:hover {
+            color: #3286AA;
+            text-decoration: underline;
+        }
+
+        .more {
+            color: darkblue;
+            font-size: large;
+            text-decoration: none;
+        }
+
+        .more:hover {
+            text-decoration: underline;
+        }
+
+        .cartbutton {
+            padding: 8px;
+            background-color: #3286AA;
+            color: aliceblue;
+            font-size: medium;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px !important;
+            max-width: 200px;
+        }
+
+        .cartbutton:hover {
+            background-color: #2c7291;
+        }
         </style>
     </head> 
 <body>
@@ -264,32 +301,51 @@ function subString($str){
                         <h3 style="font-weight: bold;">Latest Arrivals</h3>
                     </div>
                     <div class="col-auto">
-                        <a href="#" style="color:darkblue; font-size: large;">More &rsaquo;&rsaquo;&rsaquo;</a>
+                        <a href="booklist.php" style="color:darkblue; font-size: large;">More &rsaquo;&rsaquo;&rsaquo;</a>
                     </div>
                 </div>
             </header>
         </div>
 
         <!--books list-->
-        <div class="row" style="margin-left: 180px; margin-right:180px">
-            <?php foreach ($rows as $row) { ?>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="images/logo.png" class="card-img-top" style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title" style="font-weight:bold;"><?php echo $row['book_title']; ?></h5>
-                            <p class="card-text" style="font-size: medium;"><?php echo "RM ". $row['book_price']; ?></p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="index.php?bookid=<?php echo $row['book_id']; ?>&submit=cart" class="button btn-sm px-3 me-2" onclick="addToCart(<?php echo $row['book_id']; ?>)">
-                                    <i class="fas fa-cart-plus"></i> Add to cart
-                                </a>
-                            </div>
+        <div class="w3-main w3-content w3-padding" style="max-width:1350px;margin-top:10px">
+            <div class="w3-grid-template">
+                <?php
+                foreach ($rows as $book) {
+                    // Extracting book details
+                    $bookid = $book['book_id'];
+                    $book_title = subString($book['book_title']);
+                    $book_author = $book['book_author'];
+                    $book_isbn = $book['book_isbn'];
+                    $book_price = $book['book_price'];
+                    $book_description = $book['book_description'];
+                    $book_pub = $book['book_pub'];
+                    $book_lang = $book['book_lang'];
+                    $book_date = $book['book_date'];
+                    $book_qty = $book['book_qty'];
+
+                    // Displaying book information in a card format with a link to details page
+                    echo "
+                <div class='w3-center w3-padding-small' style='min-height:380px;'>
+                    <div class='w3-card w3-round-large'>
+                        <div class='w3-padding-small'>
+                            <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
+                        </div>
+                        <div class='w3-description'>
+                        <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                            <p>RM " . number_format($book_price, 2) . " / $book_qty avail</p>
+                            <a href='index.php?bookid=$bookid&submit=cart' class='cartbutton w3-round-small' style='margin-bottom: auto;'>
+                                <i class='fas fa-cart-plus'></i> Add to cart
+                            </a>
                         </div>
                     </div>
-                </div>
-            <?php } ?>
+                </div>";
+                }
+                ?>
+            </div>
         </div>
     </section>
+    <br><br>
 
     <footer>
         <div class="footer_info">
