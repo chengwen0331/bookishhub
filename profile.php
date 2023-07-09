@@ -65,30 +65,17 @@ if (isset($_POST['addaddress'])) {
     $state = $_POST['state'];
     $country = $_POST['country'];
     $labelas = $_POST['label'];
+    $default = $_POST['default'];
 
-    $sqladd = "INSERT INTO `tbl_address`(`user_id`, `address1`, `address2`, `address3`, `city`, `state`, `country`, `postalcode`, `label`, `address_name`, `address_phone`) VALUES ('$uid','$address1','$address2','$address3','$city','$state','$country','$code','$labelas','$fullname','$addphone')";
+    $sqlUpdateDefault = "UPDATE `tbl_address` SET `default` = 'No' WHERE `user_id` = '$uid' AND `default` = 'Yes'";
+    $conn->exec($sqlUpdateDefault);
+
+    $sqladd = "INSERT INTO `tbl_address`(`user_id`, `address1`, `address2`, `address3`, `city`, `state`, `country`, `postalcode`, `label`, `address_name`, `address_phone`, `default`) VALUES ('$uid','$address1','$address2','$address3','$city','$state','$country','$code','$labelas','$fullname','$addphone', '$default')";
     $result = $conn->exec($sqladd);
     if ($result !== false) {
         echo "<script>alert('Insertion address successful!')</script>";
     } else {
         echo "<script>alert('Insertion address failed!')</script>";
-    }
-}
-
-if (isset($_POST['addcard'])) {
-    $uid = $_POST['id'];
-    $bank = $_POST['bank'];
-    $cardno = $_POST['cardno'];
-    $expires = $_POST['expires'];
-    $ccv = $_POST['ccv'];
-    $cardname = $_POST['cardname'];
-
-    $sqladdcard = "INSERT INTO `tbl_card`(`card_no`, `card_expires`, `cvv`, `card_name`, `user_id`, `card_bank`) VALUES ('$cardno','$expires','$ccv','$cardname','$uid','$bank')";
-    $result = $conn->exec($sqladdcard);
-    if ($result !== false) {
-        echo "<script>alert('Insertion debit / credit card successful!')</script>";
-    } else {
-        echo "<script>alert('Insertion debit / credit card failed!')</script>";
     }
 }
 ?>
@@ -101,6 +88,7 @@ if (isset($_POST['addcard'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -153,17 +141,6 @@ if (isset($_POST['addcard'])) {
             padding-right: 15px;
             font-size: medium;
             text-align: left;
-            margin-bottom: 0px ! important;
-        }
-
-        .card-details {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .reduced-margin {
             margin-bottom: 0px ! important;
         }
 
@@ -245,81 +222,89 @@ if (isset($_POST['addcard'])) {
             padding: 5px 10px;
             font-size: 22px;
         }
+
         .footer_info {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                grid-gap: 20px;
-                justify-items: center;
-                align-items: flex-start;
-                padding: 20px;
-                background-color: #fff;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-                margin-top:20px;
-            }
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
 
-            .quicklinks ul,
-            .contact_info {
-                list-style: none;
-                padding: 0;
-            }
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
 
-            .quicklinks h2,
-            .contact_us h2 {
-                position: relative;
-                margin-bottom: 15px;
-            }
-            .quicklinks h2:after,
-            .contact_us h2:after {
-                content: "";
-                position: absolute;
-                left: 0;
-                bottom: -5px;
-                height: 4px;
-                width: 50px;
-                background-color: #cc2e2e;
-            }
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
 
-            .quicklinks ul li,
-            .contact_info li {
-                margin-bottom: 10px;
-            }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
 
-            .quicklinks ul li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .quicklinks ul li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .contact_info li {
-                display: flex;
-                margin-bottom: 10px;
-                }
-            .contact_info span {
-                margin-right: 8px;
-                display: flex;
-            }
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
 
-            .contact_info p {
-                margin: 0;
-                display: flex;
-                align-items: center;
-            }
-            .contact_info li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .contact_info li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .copy-right {
-                background-color: #f2f2f2;
-                padding: 20px;
-                text-align: center;
-                font-size:20px;
-            }
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
     </style>
     <script>
         $(document).ready(function() {
@@ -331,32 +316,21 @@ if (isset($_POST['addcard'])) {
                 // Hide the "My Orders" section
                 $(".orders-section").hide();
                 $(".address-section").hide();
-                $(".cards-section").hide();
 
                 // Show the "Edit Profile" section
                 $(".edit-profile-section").show();
             });
+
             $("#address").click(function() {
                 // Hide the "My Orders" section
                 $(".orders-section").hide();
                 $(".edit-profile-section").hide();
-                $(".cards-section").hide();
 
                 // Show the "Edit Profile" section
                 $(".address-section").show();
             });
-            $("#card").click(function() {
-                // Hide the "My Orders" section
-                $(".orders-section").hide();
-                $(".edit-profile-section").hide();
-                $(".address-section").hide();
-
-                // Show the "Edit Profile" section
-                $(".cards-section").show();
-            });
             $("#orders").click(function() {
                 // Hide the "My Orders" section
-                $(".cards-section").hide();
                 $(".edit-profile-section").hide();
                 $(".address-section").hide();
 
@@ -383,9 +357,6 @@ if (isset($_POST['addcard'])) {
                         <a href="#" id="edit-profile-button" class="button w3-block" style="text-align: center; margin-bottom: 20px;">Edit Profile</a>
                         <div style="margin-bottom: 20px;">
                             <a href="#" id="address" class="element" style="margin-bottom: 30px;"><i class="fa fa-map-marker-alt" style="margin-right: 20px;"></i> My Addresses</a><br>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <a href="#" id="card" class="element" style="margin-bottom: 30px;"><i class="fa fa-credit-card" style="margin-right: 15px;"></i> My Cards</a>
                         </div>
                         <div style="margin-bottom: 20px;">
                             <a href="#" id="orders" class="element" style="margin-bottom: 30px;"><i class="fas fa-shopping-bag" style="margin-right: 15px;"></i> My Orders</a>
@@ -423,9 +394,10 @@ if (isset($_POST['addcard'])) {
                                                 <div class="col-md-6" style="text-align: left;">
                                                     <!-- Order Details -->
                                                     <h3 class="card-title reduce" style="margin-top: 30px;"><b><?php echo $order['book_title']; ?></b></h3>
-                                                    <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo $order['book_price']; ?></p>
+                                                    <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo number_format($order['book_price'], 2); ?></p>
                                                     <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Quantity: <?php echo $order['order_qty']; ?></p>
-                                                    <p class="card-text reduce" style="font-size: large; margin-top: -10px; margin-bottom: 30px;">Order ID: <?php echo $order['order_receiptid']; ?></p>
+                                                    <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Order ID: <?php echo $order['order_receiptid']; ?></p>
+                                                    <p class="card-text reduce" style="font-size: large; margin-top: -10px; margin-bottom: 30px;">Order Date: <?php echo date('F j, Y h:i A', strtotime($order['order_date'])); ?></p>
                                                 </div>
                                                 <div class="status-container">
                                                     <span style="text-align: start;"></span>
@@ -434,143 +406,95 @@ if (isset($_POST['addcard'])) {
                                             </div>
                                             <hr>
                                             <div class="order-total">
-                                                <p class="card-text" style="font-size: 20px;"><b>Order Total: RM <?php echo $order['order_paid']; ?></b></p>
+                                                <p class="card-text" style="font-size: 20px;"><b>Order Total: RM <?php echo number_format($order['order_paid'], 2); ?></b></p>
                                             </div>
                                         </div>
                                     </div><?php }
                                     } ?>
                         </div>
-                <!--Edit Profile-->
-                <div class="edit-profile-section" style="display: none;">
-                    <h4 class="w3-center" style="font-weight: 600; margin-top:20px;">Edit Profile</h4>
-                    <hr>
-                    <form name="editprofile" action="profile.php" method="post" id="editprofile" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['user_name']; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo $row['user_email']; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $row['user_phone']; ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">User Image</label>
-                            <img class="w3-image w3-round w3-margin" src="<?php echo file_exists('images/profile/' . $user_id . '.jpg') ? 'images/profile/' . $user_id . '.jpg' : 'images/userimg.png'; ?>" style="height:30%;width:30%;max-width:330px"><br>
-                            <input type="file" onchange="previewFile()" name="image" id="image">
-                        </div>
-                        <div class="text-end">
-                            <button type="submit" class="button save-button" style="margin-bottom: 20px;" name="save" value="save">Save <i class="fas fa-save"></i></button>
-                        </div>
-                    </form>
-                </div>
-                <!-- My Addresses -->
-                <?php
-                $sqladdress = "SELECT * FROM tbl_address WHERE user_id = $user_id";
-                $stmt = $conn->prepare($sqladdress);
-                $stmt->execute();
-                $rows = $stmt->fetchAll();
-                ?>
-                <div class="address-section" style="display: none; margin-top: 20px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="w3-center" style="font-weight: 600; margin-top: 15px;">My Addresses</h4>
-                        <a href="#" class="button" onclick="document.getElementById('addaddress').style.display='block';return false;"><i class="fas fa-plus"></i> Add New Address</a>
-                    </div>
-                    <hr>
-                    <?php if (empty($rows)) echo "<p style='font-size: large;'>No addresses. Please add a new one.</p>";
-                    else { ?>
-                        <div class="row">
-                            <?php foreach ($rows as $row) { ?>
-                                <div class="col-md-6">
-                                    <div class="card mb-4">
-                                        <div class="card-body reduced-margin">
-                                            <h5 class="card-title" style="font-size: x-large; font-weight: bold; margin-top: 10px;"><?php echo $row['address_name']; ?></h5>
-                                            <p class="card-text"><?php echo $row['address1']; ?></p>
-                                            <p class="card-text"><?php echo $row['address2']; ?></p>
-                                            <p class="card-text"><?php echo $row['address3']; ?></p>
-                                            <p class="card-text"><b><?php echo $row['postalcode'] . " " . $row['city'] . ", " . $row['state'] . ", " . $row['country']; ?></b></p>
-                                            <div class="d-flex justify-content-end reduced-margin" style="margin-bottom: 0px !important;">
-                                                <p class="labelas" style="margin-right: auto;" style="margin-bottom: 0px !important;"><?php echo $row['label']; ?></p>
-                                                <a href="#" class="btn btn-link edit-button" onclick="openEditPopup('<?php echo $row['address_id']; ?>', '<?php echo $row['user_id']; ?>')"><b>Edit</b></a>
-
-                                                <form class="delete-entry-form" method="POST" action="deleteprofile.php?addressid=<?php echo $row['address_id']; ?>">
-                                                    <button type="button" class="btn btn-link text-danger delete-button" value="deleteAddress" onclick="openDeleteModal(<?php echo $row['address_id']; ?>, <?php echo $row['user_id']; ?>)">
-                                                        <b>Delete</b>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!--Edit Profile-->
+                        <div class="edit-profile-section" style="display: none;">
+                            <h4 class="w3-center" style="font-weight: 600; margin-top:20px;">Edit Profile</h4>
+                            <hr>
+                            <form name="editprofile" action="profile.php" method="post" id="editprofile" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $row['user_name']; ?>">
                                 </div>
-                            <?php } ?>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="<?php echo $row['user_email']; ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" value="<?php echo $row['user_phone']; ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="image" class="form-label">User Image</label>
+                                    <img class="w3-image w3-round w3-margin" src="<?php echo file_exists('images/profile/' . $user_id . '.jpg') ? 'images/profile/' . $user_id . '.jpg' : 'images/userimg.png'; ?>" style="height:30%;width:30%;max-width:330px"><br>
+                                    <input type="file" onchange="previewFile()" name="image" id="image">
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="button save-button" style="margin-bottom: 20px;" name="save" value="save">Save <i class="fas fa-save"></i></button>
+                                </div>
+                            </form>
                         </div>
-                    <?php } ?>
-                </div>
+                        <!-- My Addresses -->
+                        <?php
+                        $sqladdress = "SELECT * FROM tbl_address WHERE user_id = $user_id";
+                        $stmt = $conn->prepare($sqladdress);
+                        $stmt->execute();
+                        $rows = $stmt->fetchAll();
+                        ?>
+                        <div class="address-section" style="display: none; margin-top: 20px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="w3-center" style="font-weight: 600; margin-top: 15px;">My Addresses</h4>
+                                <a href="#" class="button" onclick="document.getElementById('addaddress').style.display='block';return false;"><i class="fas fa-plus"></i> Add New Address</a>
+                            </div>
+                            <hr>
+                            <?php if (empty($rows)) echo "<p style='font-size: large;'>No addresses. Please add a new one.</p>";
+                            else { ?>
+                                <div class="row">
+                                    <?php foreach ($rows as $row) { ?>
+                                        <div class="col-md-6">
+                                            <div class="card mb-4">
+                                                <div class="card-body reduced-margin">
+                                                    <h5 class="card-title" style="font-size: x-large; font-weight: bold; margin-top: 10px;"><?php echo $row['address_name']; ?></h5>
+                                                    <p class="card-text"><?php echo $row['address1']; ?></p>
+                                                    <p class="card-text"><?php echo $row['address2']; ?></p>
+                                                    <p class="card-text"><?php echo $row['address3']; ?></p>
+                                                    <p class="card-text"><b><?php echo $row['postalcode'] . " " . $row['city'] . ", " . $row['state'] . ", " . $row['country']; ?></b></p>
+                                                    <div class="d-flex justify-content-end reduced-margin" style="margin-bottom: 0px !important;">
+                                                        <p class="labelas" style="margin-right: auto;" style="margin-bottom: 0px !important;"><?php echo $row['label']; ?></p>
 
-                <!-- My Cards -->
-                <?php
-                $sqlcard = "SELECT * FROM tbl_card WHERE user_id = $user_id";
-                $stmt = $conn->prepare($sqlcard);
-                $stmt->execute();
-                $rows = $stmt->fetchAll();
-                ?>
-                <div class="cards-section" style="display: none; margin-top: 20px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="w3-center" style="font-weight: 600; margin-top: 15px;">My Debit / Credit Cards</h4>
-                        <a href="#" class="button" onclick="document.getElementById('addcard').style.display='block';return false;"><i class="fas fa-plus"></i> Add New Card</a>
-                    </div>
-                    <hr>
-                    <?php if (empty($rows)) echo "<p style='font-size: large;'>No debit / credit cards. Please add a new one.</p>";
-                    else { ?>
-                        <div class="row">
-                            <?php foreach ($rows as $row) { ?>
-                                <div class="col-md-6">
-                                    <div class="card mb-3" style="background-color: #303030;">
-                                        <div class="card-body">
-                                            <h5 class="card-title" style="font-size: x-large; font-weight: bold; margin-top: 10px; color: white; text-align: end;"><?php echo $row['card_bank']; ?></h5>
-                                            <div style="text-align: left; margin-right: 10px; margin-bottom: 15px;">
-                                                <img src="images/chip.png" style="width: 10%; height: 10%;" alt="Card Chip" />
-                                            </div>
-                                            <div class="d-flex justify-content-between" style="margin-bottom: 0 !important;">
-                                                <div>
-                                                    <h6 style="color: white; margin: 0;">Card Number</h6>
-                                                    <div class="margin mb-4">
-                                                        <p class="card-text" style="font-size: 20px; color: white; text-align: start;"><?php echo $row['card_no']; ?></p>
-                                                    </div>
-                                                </div>
-                                                <div style="text-align: end;">
-                                                    <div>
-                                                        <h6 style="color: white; margin-right: 30px;">Valid Thru</h6>
-                                                        <p class="card-text" style="font-size: 18px; color: white; margin: 3px 55px;"><?php echo $row['card_expires']; ?></p>
+                                                        <?php
+                                                        if ($row['default'] == 'Yes') {
+                                                            echo '<p class="labelas" style="margin-right: auto;" style="margin-bottom: 0px !important;"><b>Default</b></p>';
+                                                        } else {
+                                                            echo '';
+                                                        }
+                                                        ?>
+
+                                                        <a href="#" class="btn btn-link edit-button" onclick="openEditPopup('<?php echo $row['address_id']; ?>', '<?php echo $row['user_id']; ?>')"><b>Edit</b></a>
+
+                                                        <form class="delete-entry-form" method="POST" action="deleteprofile.php?addressid=<?php echo $row['address_id']; ?>">
+                                                            <button type="button" class="btn btn-link text-danger delete-button" value="deleteAddress" onclick="openDeleteModal(<?php echo $row['address_id']; ?>, <?php echo $row['user_id']; ?>)">
+                                                                <b>Delete</b>
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style="margin-bottom: 0; margin-top: 5px;">
-                                                <p class="card-text" style="font-size: 20px; color: white; margin: 0; margin-top: -15px;"><?php echo $row['card_name']; ?></p>
-                                            </div>
-                                            <div class="d-flex justify-content-end">
-                                                <a href="#" class="btn btn-link edit-button" onclick="openEditCard('<?php echo $row['card_id']; ?>', '<?php echo $row['user_id']; ?>')"><b>Edit</b></a>
-                                                <form class="delete-entry-form" method="POST" action="deleteprofile.php?cardid=<?php echo $row['card_id']; ?>">
-                                                    <button type="button" class="btn btn-link text-danger delete-button" value="deleteCard" onclick="openDeleteCard(<?php echo $row['card_id']; ?>, <?php echo $row['user_id']; ?>)">
-                                                        <b>Delete</b>
-                                                    </button>
-                                                </form>
-                                            </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 </div>
                             <?php } ?>
                         </div>
-                    <?php } ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
 
     <script>
@@ -592,54 +516,54 @@ if (isset($_POST['addcard'])) {
         }
     </script>
 
-<br><br>
+    <br><br>
 
-   <footer>
-      <div class="footer_info">
-         <div class="quicklinks">
-            <h2>Quick Links</h2>
-            <ul>
-               <li><a href="about.php">About</a></li>
-               <li><a href="faqs.php">FAQs</a></li>
-               <li><a href="privacy_policy.php">Privacy Policy</a></li>
-               <li><a href="terms_of_service.php">Terms of Service</a></li>
-               <li><a href="contactus.php">Contact Us</a></li>
-            </ul>
-         </div>
-         <div class="quicklinks">
-            <h2>Shop</h2>
-            <ul>
-               <li><a href="booklist.php">All</a></li>
-               <li><a href="#">New Arrival</a></li>
-               <li><a href="#">Best Seller</a></li>
-            </ul>
-         </div>
-         <div class="contact_us">
-            <h2>Contact Us</h2>
-            <ul class="contact_info">
-               <li>
-                  <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
-                  <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
-               </li>
-               <li>
-                  <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
-                  <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
-               </li>
-               <li>
-                  <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
-                  <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
-               </li>
-            </ul>
-         </div>
-      </div>
-      <div class="copy-right">
-         <p>
-            Copyright © 2023 | BookishHub®
-         </p>
-      </div>
-   </footer>
-   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <footer>
+        <div class="footer_info">
+            <div class="quicklinks">
+                <h2>Quick Links</h2>
+                <ul>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="faqs.php">FAQs</a></li>
+                    <li><a href="privacy_policy.php">Privacy Policy</a></li>
+                    <li><a href="terms_of_service.php">Terms of Service</a></li>
+                    <li><a href="contactus.php">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="quicklinks">
+                <h2>Shop</h2>
+                <ul>
+                    <li><a href="booklist.php">All</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
+                </ul>
+            </div>
+            <div class="contact_us">
+                <h2>Contact Us</h2>
+                <ul class="contact_info">
+                    <li>
+                        <span><ion-icon name="location-outline" aria-hidden="true"></ion-icon></span>
+                        <span>8, Jalan 7/118b,<br> Desa Tun Razak,<br> 56000 Kuala Lumpur,<br> Wilayah Persekutuan Kuala Lumpur</span>
+                    </li>
+                    <li>
+                        <span><ion-icon name="call-outline" aria-hidden="true"></ion-icon></span>
+                        <p><a href="tel:+6019-8745632">+6019-8745632</a></P>
+                    </li>
+                    <li>
+                        <span><i class="fa-regular fa-envelope" aria-hidden="true"></i></span>
+                        <p><a href="mailto:bookishhubb@gmail.com">bookishhubb@gmail.com</a></P>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="copy-right">
+            <p>
+                Copyright © 2023 | BookishHub®
+            </p>
+        </div>
+    </footer>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <!--Add New Address-->
     <div id="addaddress" class="w3-modal">
@@ -683,7 +607,23 @@ if (isset($_POST['addcard'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <label><b>State</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px;" name="state" type="text" id="state" pattern="[^\d]*" required>
+                            <br>
+                            <select class="form-control" style="margin-top: 10px; padding-bottom: 10px;" id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <option value="Perak">Perak</option>
+                                <option value="Kedah">Kedah</option>
+                                <option value="Johor">Johor</option>
+                                <option value="Kelantan">Kelantan</option>
+                                <option value="Melaka">Melaka</option>
+                                <option value="Perlis">Perlis</option>
+                                <option value="Penang">Penang</option>
+                                <option value="Pahang">Pahang</option>
+                                <option value="Negeri Sembilan">Negeri Sembilan</option>
+                                <option value="Terengganu">Terengganu</option>
+                                <option value="Sabah">Sabah</option>
+                                <option value="Sarawak">Sarawak</option>
+                                <option value="Selangor">Selangor</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label><b>Country</b></label>
@@ -700,19 +640,39 @@ if (isset($_POST['addcard'])) {
                         }
                     </script>
 
-                    <p style="margin-top: 10px;"><b>Label As</b></p>
-                    <div class="form-check form-check-inline">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p style="margin-top: 10px;"><b>Label As</b></p>
+                            <div class="form-check form-check-inline">
 
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="label" id="label" value="Home" checked>
-                            Home
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="label" id="label" value="Work">
-                            Work
-                        </label>
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="label" id="label" value="Home">
+                                    Home
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="label" id="label" value="Work">
+                                    Work
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="margin-top: 10px;"><b>Set As Default</b></p>
+                            <div class="form-check form-check-inline">
+
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="default" id="default" value="Yes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="default" id="default" value="No">
+                                    No
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <p class="d-flex justify-content-center">
@@ -744,13 +704,19 @@ if (isset($_POST['addcard'])) {
                     $('#add3i').val(data.address3);
                     $('#city1').val(data.city);
                     $('#postalcode1').val(data.postalcode);
-                    $('#state1').val(data.state);
+                    $('#state1').val(data.state).change();
                     $('#country1').val(data.country);
 
                     if (data.label === 'Home') {
                         $('#homeLabel').prop('checked', true);
                     } else if (data.label === 'Work') {
                         $('#workLabel').prop('checked', true);
+                    }
+
+                    if (data.default === 'Yes') {
+                        $('#yes').prop('checked', true);
+                    } else if (data.default === 'No') {
+                        $('#no').prop('checked', true);
                     }
 
                     // Display the Edit popup box
@@ -805,26 +771,60 @@ if (isset($_POST['addcard'])) {
                     <div class="row">
                         <div class="col-md-6">
                             <label><b>State</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px;" name="state1" type="text" id="state1" required>
+                            <br>
+                            <select class="form-control" style="margin-top: 10px; padding-bottom: 10px;" id="state1" name="state1" required>
+                                <option value="">Select State</option>
+                                <option value="Perak">Perak</option>
+                                <option value="Kedah">Kedah</option>
+                                <option value="Johor">Johor</option>
+                                <option value="Kelantan">Kelantan</option>
+                                <option value="Melaka">Melaka</option>
+                                <option value="Perlis">Perlis</option>
+                                <option value="Penang">Penang</option>
+                                <option value="Pahang">Pahang</option>
+                                <option value="Negeri Sembilan">Negeri Sembilan</option>
+                                <option value="Terengganu">Terengganu</option>
+                                <option value="Sabah">Sabah</option>
+                                <option value="Sarawak">Sarawak</option>
+                                <option value="Selangor">Selangor</option>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label><b>Country</b></label>
                             <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px;" name="country1" type="text" id="country1" required>
                         </div>
                     </div>
-
-                    <p style="margin-top: 10px;"><b>Label As</b></p>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="label1" id="homeLabel" value="Home">
-                            Home
-                        </label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="label1" id="workLabel" value="Work">
-                            Work
-                        </label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p style="margin-top: 10px;"><b>Label As</b></p>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="label1" id="homeLabel" value="Home">
+                                    Home
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="label1" id="workLabel" value="Work">
+                                    Work
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="margin-top: 10px;"><b>Set As Default</b></p>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="default1" id="yes" value="Yes">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="default1" id="no" value="No">
+                                    No
+                                </label>
+                            </div>
+                        </div>
                     </div>
 
                     <p class="d-flex justify-content-center">
@@ -856,265 +856,6 @@ if (isset($_POST['addcard'])) {
 
         function closeDeleteModal() {
             const modal = document.getElementById("deleteaddress");
-            modal.style.display = "none";
-        }
-    </script>
-    <!--Add New Card-->
-    <div id="addcard" class="w3-modal">
-        <div class="w3-modal-content" style="width:50%">
-            <header class="w3-container" style="background-color:#004891; color:white;">
-                <span onclick="document.getElementById('addcard').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                <h4 style="margin-top: 15px; margin-bottom:15px">Add New Debit / Credit Card</h4>
-            </header>
-            <div class="w3-container w3-padding">
-                <form action="profile.php" method="post">
-                    <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
-                    <div style="margin-top: 15px; margin-bottom: 15px;">
-                        <label><b>Card Bank</b></label>
-                        <input class="w3-input w3-border w3-round" style="margin-top: 10px;" name="bank" type="text" id="bank" required>
-                    </div>
-
-                    <label><b>Card Number</b></label>
-                    <input class="w3-input w3-border w3-round" style="margin-top: 10px; margin-bottom: 15px;" name="cardno" type="text" id="cardno" required>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label><b>Expiry Date (MM/YY)</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px; margin-bottom: 15px;" name="expires" type="text" id="expires" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label><b>CCV</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px; margin-bottom: 15px;" name="ccv" type="text" id="ccv" required>
-                        </div>
-                    </div>
-                    <label><b>Name on Card</b></label>
-                    <input class="w3-input w3-border w3-round" style="margin-top: 10px;" name="cardname" type="text" id="cardname" required>
-
-                    <p class="d-flex justify-content-center">
-                        <button class="button w3-btn w3-round bdesign" style="margin-top: 20px; padding-left:20px; padding-right:20px;" name="addcard" value="addcard">Add Card</button>
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script>
-        // Card number formatting
-        const cardNumberInput = document.getElementById('cardno');
-        cardNumberInput.addEventListener('input', formatCardNumber);
-
-        function formatCardNumber() {
-            let cardNumber = cardNumberInput.value.replace(/[^\d]/g, '');
-            const cardNumberLength = cardNumber.length;
-
-            if (cardNumberLength > 16) {
-                cardNumber = cardNumber.slice(0, 16);
-            }
-
-            if (cardNumberLength > 0 && cardNumberLength % 4 === 0) {
-                cardNumber = cardNumber.match(/.{1,4}/g).join(' ');
-            }
-
-            cardNumberInput.value = cardNumber;
-        }
-
-        // Expiry date validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const expiryInput = document.getElementById('expires');
-            expiryInput.addEventListener('input', validateExpiryDate);
-
-            function validateExpiryDate() {
-                let expiryDate = expiryInput.value;
-                const sanitizedValue = expiryDate.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-                let formattedValue = '';
-                const isValid = /^\d{2}$/.test(sanitizedValue);
-
-                if (sanitizedValue.length > 2) {
-                    const month = sanitizedValue.substr(0, 2);
-                    const year = sanitizedValue.substr(2, 2);
-                    formattedValue = month + '/' + year;
-                } else {
-                    formattedValue = sanitizedValue;
-                }
-                const valid = /^\d{2}\/\d{2}$/.test(formattedValue);
-
-                expiryInput.value = formattedValue;
-                expiryInput.setCustomValidity(valid ? '' : 'Invalid expiry date format (MM/YY)');
-            }
-        });
-
-        // CCV validation
-        const ccvInput = document.getElementById('ccv');
-        ccvInput.addEventListener('input', validateCCV);
-
-        function validateCCV() {
-            let ccv = ccvInput.value;
-            const sanitizedValue = ccv.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-            const isValid = /^\d{3}$/.test(sanitizedValue);
-
-            // Restrict the length of the CCV to 3 digits
-            if (sanitizedValue.length > 3) {
-                ccv = sanitizedValue.substr(0, 3);
-            }
-
-            ccvInput.value = ccv;
-            ccvInput.setCustomValidity(isValid ? '' : 'CCV must be 3 digits');
-        }
-    </script>
-    <!--Edit New Card-->
-    <script>
-        function openEditCard(cardId, userId) {
-            $.ajax({
-                url: 'editprofile.php',
-                method: 'POST',
-                data: {
-                    cardId: cardId,
-                    userId: userId
-                },
-                dataType: 'json',
-                success: function(data) {
-                    // Populate the Edit popup box with the retrieved card details
-                    $('#cardid').val(data.card_id);
-                    $('#uid').val(data.user_id);
-                    $('#bank1').val(data.card_bank);
-                    $('#cardno1').val(data.card_no);
-                    $('#expires1').val(data.card_expires);
-                    $('#ccv1').val(data.ccv);
-                    $('#cardname1').val(data.card_name);
-
-                    // Display the Edit popup box
-                    $('#editcard').css('display', 'block');
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                    alert("error");
-                    // Handle error case if necessary
-                }
-            });
-        }
-    </script>
-    <div id="editcard" class="w3-modal">
-        <div class="w3-modal-content" style="width:50%">
-            <header class="w3-container" style="background-color:#004891; color:white;">
-                <span onclick="document.getElementById('editcard').style.display='none'" class="w3-button w3-display-topright">&times;</span>
-                <h4 style="margin-top: 15px; margin-bottom:15px">Edit Card Details</h4>
-            </header>
-            <div class="w3-container w3-padding">
-                <form action="editprofile.php" method="post">
-                    <input type="hidden" name="cardid" id="cardid">
-                    <input type="hidden" name="uid" id="uid">
-                    <div style="margin-top: 15px; margin-bottom: 15px;">
-                        <label><b>Card Bank</b></label>
-                        <input class="w3-input w3-border w3-round" style="margin-top: 10px;" name="bank1" type="text" id="bank1" required>
-                    </div>
-
-                    <label><b>Card Number</b></label>
-                    <input class="w3-input w3-border w3-round" style="margin-top: 10px; margin-bottom: 15px;" name="cardno1" type="text" id="cardno1" required>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label><b>Expiry Date (MM/YY)</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px; margin-bottom: 15px;" name="expires1" type="text" id="expires1" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label><b>CCV</b></label>
-                            <input class="w3-input w3-border w3-round bdesign" style="margin-top: 10px; margin-bottom: 15px;" name="ccv1" type="text" id="ccv1" required>
-                        </div>
-                    </div>
-                    <label><b>Name on Card</b></label>
-                    <input class="w3-input w3-border w3-round" style="margin-top: 10px;" name="cardname1" type="text" id="cardname1" required>
-
-                    <p class="d-flex justify-content-center">
-                        <button class="button w3-btn w3-round bdesign" style="margin-top: 20px; padding-left:20px; padding-right:20px;" name="editcard" value="editcard">Save Changes</button>
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-    <script>
-        // Card number formatting
-        const cardNumberInput1 = document.getElementById('cardno1');
-        cardNumberInput1.addEventListener('input', formatCardNumber1);
-
-        function formatCardNumber1() {
-            let cardNumber1 = cardNumberInput1.value.replace(/[^\d]/g, '');
-            const cardNumberLength1 = cardNumber1.length;
-
-            if (cardNumberLength1 > 16) {
-                cardNumber1 = cardNumber1.slice(0, 16);
-            }
-
-            if (cardNumberLength1 > 0 && cardNumberLength1 % 4 === 0) {
-                cardNumber1 = cardNumber1.match(/.{1,4}/g).join(' ');
-            }
-
-            cardNumberInput1.value = cardNumber1;
-        }
-
-        // Expiry date validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const expiryInput1 = document.getElementById('expires1');
-            expiryInput1.addEventListener('input', validateExpiryDate1);
-
-            function validateExpiryDate1() {
-                let expiryDate1 = expiryInput1.value;
-                const sanitizedValue1 = expiryDate1.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-                let formattedValue1 = '';
-                const isValid1 = /^\d{2}$/.test(sanitizedValue1);
-
-                if (sanitizedValue1.length > 2) {
-                    const month1 = sanitizedValue1.substr(0, 2);
-                    const year1 = sanitizedValue1.substr(2, 2);
-                    formattedValue1 = month1 + '/' + year1;
-                } else {
-                    formattedValue1 = sanitizedValue1;
-                }
-                const valid1 = /^\d{2}\/\d{2}$/.test(formattedValue1);
-
-                expiryInput1.value = formattedValue1;
-                expiryInput1.setCustomValidity(valid1 ? '' : 'Invalid expiry date format (MM/YY)');
-            }
-        });
-
-        // CCV validation
-        const ccvInput1 = document.getElementById('ccv1');
-        ccvInput1.addEventListener('input', validateCCV1);
-
-        function validateCCV1() {
-            let ccv1 = ccvInput1.value;
-            const sanitizedValue1 = ccv1.replace(/[^0-9]/g, ''); // Remove non-numeric characters
-            const isValid1 = /^\d{3}$/.test(sanitizedValue1);
-
-            // Restrict the length of the CCV to 3 digits
-            if (sanitizedValue1.length > 3) {
-                ccv1 = sanitizedValue1.substr(0, 3);
-            }
-
-            ccvInput1.value = ccv1;
-            ccvInput1.setCustomValidity(isValid1 ? '' : 'CCV must be 3 digits');
-        }
-    </script>
-
-    <!--Delete New Card-->
-    <div class="delete-entry-modal" id="deletecard">
-        <div class="delete-entry-modal-content">
-            <h2><b>Delete Debit / Credit Card</b></h2>
-            <p>Are you sure you want to delete this debit / credit card?</p>
-            <form method="POST" id="deleteCardForm">
-                <button class="btnDelete" type="submit" name="delete" value="deletecard">Delete</button>
-                <button class="btnCancel" type="button" onclick="closeDeleteCard()">Cancel</button>
-            </form>
-        </div>
-    </div>
-    <script>
-        function openDeleteCard(cardId, userId) {
-            const modal = document.getElementById("deletecard");
-            const form = document.getElementById("deleteCardForm");
-            form.action = `deleteprofile.php?cardid=${cardId}&&userid=${userId}`;
-            modal.style.display = "block";
-        }
-
-        function closeDeleteCard() {
-            const modal = document.getElementById("deletecard");
             modal.style.display = "none";
         }
     </script>

@@ -65,6 +65,51 @@ if (isset($_GET['submit'])) {
                 font-size: 20px !important;
                 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
             }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f9f9f9;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                left: 0; /* Changed to 0 to align with the "Books" item */
+                top: 100%;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 14px;
+                text-decoration: none;
+                display: block;
+                border-bottom: 1px solid #ddd;
+                text-align:left;
+            }
+
+            .dropdown-content:hover{
+                display: block;
+            }
+
+            .navb-link.current {
+                color: white;
+                border-bottom: 2px solid #3286AA;
+            }
+
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            .option1{
+                cursor: pointer;
+            }
+            .option1:hover{
+                background-color: #92BBD1;
+                color: white;
+                border-bottom: 2px solid #3286AA
+            }
         </style>
     </head>
     <body>
@@ -123,12 +168,30 @@ if (isset($_GET['submit'])) {
         </div>
         <nav class="navb" style="font-size:20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
             <a href="index.php" class="navb-link">Home</a>
-            <a href="booklist.php" class="navb-link">Books</a>
+            <!--<a href="booklist.php" class="navb-link">Books</a>-->
+            <div class="dropdown">
+                <a href="#" class="navb-link" onclick="toggleBooksDropdown()">Books</a>
+                <div id="booksDropdownContent" class="dropdown-content">
+                    <a href="booklist.php" class="option1">All</a>
+                    <a href="newbooks.php" class="option1">Latest Arrival</a>
+                    <a href="bestseller.php" class="option1">Best Seller</a>
+                </div>
+            </div>
             <a href="about.php" class="navb-link">About</a>
             <a href="faqs.php" class="navb-link">FAQs</a>
             <a href="contactus.php" class="navb-link">Contact</a>
         </nav>
     </header>
+    <script>
+        function toggleBooksDropdown() {
+            var booksDropdownContent = document.getElementById("booksDropdownContent");
+            if (booksDropdownContent.style.display === "block") {
+                booksDropdownContent.style.display = "none";
+            } else {
+                booksDropdownContent.style.display = "block";
+            }
+        }
+    </script>
 
 </body>
 

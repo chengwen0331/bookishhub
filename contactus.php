@@ -71,7 +71,7 @@ $rows = $stmt->fetchAll();*/
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
-        .title{
+        .title_1{
             color:black;
             font-weight: 500;
             font-size: 2rem;
@@ -383,7 +383,7 @@ $rows = $stmt->fetchAll();*/
     <div class="box">
             <div class="contact-form">
                 <form action="">
-                    <h3 class="title">Contact Us</h3>
+                    <h3 class="title_1">Contact Us</h3>
                     <h3 style="font-size: 1.2rem;">Reason for Contact</h3>
                     <div class="reason">
                         <select id="-name" class="select_reason"><option value="Retail Enquiry">Retail Enquiry</option><option value="Book Enquiry">Book Enquiry</option><option value="Billing &amp; Payment Enquiry">Billing &amp; Payment Enquiry</option><option value="Shipping Enquiry">Shipping Enquiry</option><option value="Promo &amp; Discount Enquiry">Promo &amp; Discount Enquiry</option><option value="Order Enquiry">Order Enquiry</option><option value="Others">Others</option></select>
@@ -459,8 +459,8 @@ $rows = $stmt->fetchAll();*/
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="booklist.php">All</a></li>
-                    <li><a href="#">New Arrival</a></li>
-                    <li><a href="#">Best Seller</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
                 </ul>
             </div>
             <div class="contact_us">

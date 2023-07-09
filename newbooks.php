@@ -42,14 +42,14 @@ if (isset($_GET['search'])) {
     } else {
         echo "<script>alert('Please enter the search keyword.');</script>";
         // Database query to fetch all books
-        $sqlquery = "SELECT * FROM tbl_books";
+        $sqlquery = "SELECT * FROM tbl_newbooks";
         $stmt = $conn->prepare($sqlquery);
         $stmt->execute();
         $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 } else {
-    // Database query to fetch all books
-    $sqlquery = "SELECT * FROM tbl_books";
+    // Database query to fetch new books
+    $sqlquery = "SELECT * FROM tbl_newbooks";
     $stmt = $conn->prepare($sqlquery);
     $stmt->execute();
     $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -310,9 +310,12 @@ function subString($str)
 
     <div class="w3-main w3-content w3-padding" style="max-width:1000px;margin-top:20px">
         <div class="w3-container w3-center">
-            <p style="font-size: 36px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
-                Welcome <?php echo $user_name; ?> !
+        <div style="display: inline-block; border-bottom: 4px solid rgb(46,135,174);">
+            <p style="font-size: 36px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                Latest Arrival
             </p>
+        </div>
+
             <?php if (count($books) == 0 && !empty($search)) {
                 echo '<div class="alert alert-danger"><em>The keyword "'.$search.'" is not found. Please try again.</em></div>';
             }?>

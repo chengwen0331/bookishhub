@@ -274,8 +274,8 @@ function sendMail($email, $resetotp)
             <h2>Shop</h2>
             <ul>
                <li><a href="booklist.php">All</a></li>
-               <li><a href="#">New Arrival</a></li>
-               <li><a href="#">Best Seller</a></li>
+               <li><a href="newbooks.php">Latest Arrival</a></li>
+               <li><a href="bestseller.php">Best Seller</a></li>
             </ul>
          </div>
          <div class="contact_us">

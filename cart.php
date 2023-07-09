@@ -51,6 +51,15 @@ if ($number_of_rows > 0) {
                 echo "<script>alert('Removed')</script>";
             }
         }
+        if ($_GET['submit'] == "delete") {
+            $bookid = $_GET['bookid'];
+            $qty = $_GET['qty'];
+                $deletecart = "DELETE FROM `tbl_carts` WHERE user_email = '$useremail' AND book_id = '$bookid'";
+                $conn->exec($deletecart);
+                $book_total = 0;
+                echo "<script>alert('Book removed')</script>";
+ 
+        }
     }
 } else {
     echo "<script>alert('Your cart is currently empty')</script>";
@@ -75,12 +84,13 @@ function subString($str)
 
 <!DOCTYPE html>
 <html>
-<title>Book Depo</title>
+<title>Bookish Hub</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <script src="js/script.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -88,23 +98,23 @@ function subString($str)
     body{
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    .clickable-button {
+    .clickable_button {
         background-color: rgb(50, 134, 171);
         color: white;
         padding: 12px 20px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        width: 100%;
+        max-width: 30%;
         text-decoration: none;
         margin-bottom: 10px;
     }
 
-    .clickable-button:hover {
+    .clickable_button:hover {
         background-color: rgb(0, 50, 100);
     }
 
-    .clickable-button2 {
+    .clickable_button2 {
         color: black;
         margin-top: 0px;
         cursor: pointer;
@@ -112,9 +122,25 @@ function subString($str)
         text-decoration: none;
     }
 
-    .clickable-button2:hover {
+    .clickable_button2:hover {
         color: rgb(0, 50, 100);
         text-decoration: underline;
+    }
+
+    .clickable_button3 {
+        background-color: rgb(50, 134, 171);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 40%;
+        text-decoration: none;
+        margin-bottom: 10px;
+    }
+
+    .clickable_button3:hover {
+        background-color: rgb(0, 50, 100);
     }
 
     .box {
@@ -240,26 +266,33 @@ function subString($str)
                 $book_total = $book_qty * $book_price;
                 $total_payable += $book_total;
                 $carttotal += $book_qty;
-                echo "<div class='w3-center w3-padding-small' id='bookcard_$bookid' ><div class = 'w3-card w3-round-large carts'>
+                echo "<div class='w3-center w3-padding-small' id='bookcard_$bookid'><div class='w3-card w3-round-large carts'>
                     <div class='w3-padding-small'><a href='bookdetails.php?bookid=$bookid'><img class='w3-container w3-image' 
-                    src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='min-height:240px; margin-top:10px;'></a></div>
-                    <b><span style='font-size: 18px;'>$book_title</span></b><br>RM " . number_format($book_price, 2) . " / unit<br><div class='box'>
-                    <input type='button' class='w3-button w3-white w3-border w3-border-secondary w3-round-large remove-button' id='button_id' value='-' onClick='removeCart($bookid,$book_price);'>
-                    <label id='qtyid_$bookid'>$book_qty</label>
-                    <input type='button' class='add-button w3-button w3-white w3-border w3-border-secondary w3-round-large' id='button_id' value='+' onClick='addCart($bookid,$book_price);'></div>
-                    
-                    <div style='margin-top: 10px;'><b><label id='bookprid_$bookid' style='margin-bottom: 15px;'> Price: RM" . number_format($book_total, 2) ."</label></b></div><div style='margin-bottom: 20px'></div></div></div>";
+                    src='images/books/$bookid.jpg' onerror=\"this.onerror=null; this.src='images/books/default.jpg';\" style='min-height:240px; margin-top:10px;'></a></div>
+                    <b><span style='font-size: 18px;'>$book_title</span></b><br>RM " . number_format($book_price, 2) . " / unit<br>
+                    <div class='box'>
+                        <input type='button' class='w3-button w3-white w3-border w3-border-secondary w3-round-large remove-button' id='button_id' value='-' onClick='removeCart($bookid,$book_price);'>
+                        <label id='qtyid_$bookid'>$book_qty</label>
+                        <input type='button' class='add-button w3-button w3-white w3-border w3-border-secondary w3-round-large' id='button_id' value='+' onClick='addCart($bookid,$book_price);'>
+                    </div>
+                    <div style='margin-top: 10px;'>
+                        <b><label id='bookprid_$bookid' style='margin-bottom: 15px;'> Price: RM" . number_format($book_total, 2) ."</label></b>
+                    </div>
+                    <div style='margin-top: 5px;'>
+                        <p><label class ='clickable_button3' onClick='deleteCart($bookid,$book_price);'><i class='fa-solid fa-trash-can' style='cursor: pointer; color: white;' onClick='deleteCart($bookid,$book_price);'></i></label></p>
+                    </div>
+                    <div style='margin-bottom: 20px'></div>
+                </div></div>";
             }
             ?>
         </div>
         <?php
         echo "<div class='w3-container w3-padding w3-block w3-center'>
                 <p><b><label id='totalpaymentid' style='margin-top:20px; margin-bottom:20px; font-size: 22px;'>Total Amount Payable: RM" . number_format( $total_payable, 2) ."</label></b></p>
-                <a href='payment_details.php?email=$useremail&amount=$total_payable' class='clickable-button'>
-                    CHECKOUT
-                    <i class='fas fa-arrow-right' style='color: #ffffff; margin-left: 5px;'></i>
-                </a><br><br>
-                <a href='booklist.php' class='clickable-button2' style='font-size:16px;'>Continue Shopping</a>
+                <a href='payment_details.php?email=$useremail&amount=$total_payable&quantity=$$book_qty'>
+                <p><label class='clickable_button'>Check Out<i class='fas fa-arrow-right' style='margin-left: 5px;'></i></label></p>
+                </a>
+                <a href='booklist.php' class='clickable_button2' style='font-size:16px;'>Continue Shopping</a>
             </div>";
         ?>
 
@@ -352,6 +385,46 @@ function removeCart(bookid, book_price) {
         }
     });
 }
+function deleteCart(bookid, book_price) {
+    // Update the quantity label on the frontend immediately
+    const qtyLabel = document.getElementById("qtyid_" + bookid);
+    const currentQty = parseInt(qtyLabel.innerHTML);
+    
+        qtyLabel.innerHTML = ""; // Remove the quantity label
+        qtyLabel.parentNode.parentNode.remove();
+        window.location.replace("cart.php");
+         // Remove the item row from the cart table
+
+    // Perform the AJAX request to update the cart on the backend
+    jQuery.ajax({
+        method: "GET",
+        url: "mycartajax.php",
+        data: "bookid=" + bookid + "&submit=delete&bookprice=" + book_price,
+        cache: false,
+        dataType: "json",
+        success: function(response) {
+            console.log(response);
+            if (response.status === "success") {
+                // Update other elements on the frontend if needed
+                console.log(response.data.carttotal);
+                if (response.data.carttotal == null || response.data.carttotal == 0) {
+                    alert("Cart empty");
+                    window.location.replace("index.php");
+                } else {
+                    document.getElementById("cartTotal").innerHTML = response.data.carttotal;
+                    document.getElementById("totalpaymentid").innerHTML = "Total Amount Payable: RM " + response.data.totalpayable;
+                    document.getElementById("bookprid_" + bookid).innerHTML = "Price: RM " + response.data.booktotal[bookid];
+                }
+            } else {
+                alert("Failed");
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handle error here
+            console.log(xhr.responseText);
+        }
+    });
+}
         </script>
     </div>
 <footer>
@@ -370,8 +443,8 @@ function removeCart(bookid, book_price) {
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="booklist.php">All</a></li>
-                    <li><a href="#">New Arrival</a></li>
-                    <li><a href="#">Best Seller</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
                 </ul>
             </div>
             <div class="contact_us">

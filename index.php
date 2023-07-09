@@ -44,7 +44,7 @@ if (isset($_GET['submit'])) {
     }
 } 
 else {
-    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_date DESC LIMIT 10";
+    $sqlquery = "SELECT * FROM tbl_newbooks";
 }
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail'");
@@ -363,8 +363,8 @@ function subString($str){
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="booklist.php">All</a></li>
-                    <li><a href="#">New Arrival</a></li>
-                    <li><a href="#">Best Seller</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
                 </ul>
             </div>
             <div class="contact_us">

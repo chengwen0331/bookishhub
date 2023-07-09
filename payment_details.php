@@ -38,24 +38,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $targetDirectory = "images/";
       $targetFile = $targetDirectory . basename($receipt_file);
       move_uploaded_file($receiptTmp, $targetFile);
-      $sql = "INSERT INTO `tbl_payments` (`payment_email`, `payment_fullname`, `payment_billing_address`, `payment_delivery_address`, `payment_city`, `payment_state`, `payment_zip_code`, `payment_phone_number`, `payment_remark`,`payment_receipt`) 
+      $sqlpayment = "INSERT INTO `tbl_payments` (`payment_email`, `payment_fullname`, `payment_billing_address`, `payment_delivery_address`, `payment_city`, `payment_state`, `payment_zip_code`, `payment_phone_number`, `payment_remark`,`payment_receipt`) 
                 VALUES ('$email', '$fullname', '$billing_address', '$delivery_address', '$city', '$state', '$zip_code', '$phone_number', '$remark', '$receipt_file')";
+    
+      $orderReceiptId = generateOrderReceiptId();
+      $orderstatus ='Processing';
       try {
-         $conn->exec($sql);
+         $conn->exec($sqlpayment);
+
+         $sqlcart = "SELECT * FROM tbl_carts JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE user_email = '$useremail'";
+         $stmt = $conn->prepare($sqlcart);
+         $stmt->execute();
+         $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+         foreach ($cartItems as $item) {
+            $bookid = $item['book_id'];
+            $qty = intval($item['cart_qty']);
+            $bookPrice = $item['book_price'];
+            $bookTtlPrice = $qty * $bookPrice ;
+
+            $ordersql ="INSERT INTO `tbl_orders`(`order_receiptid`, `order_bookid`, `order_qty`, `order_custid`, `order_paid`, `order_status`) VALUES ('$orderReceiptId','$bookid','$qty','$useremail','$bookTtlPrice','$orderstatus')";
+            $conn->exec($ordersql);
+         }
+         
+         
+
          sendMail($email);
          $clearCartSql = "DELETE FROM `tbl_carts` WHERE user_email = '$email_add'";
-        $conn->exec($clearCartSql);
+         $conn->exec($clearCartSql);
          echo "<script>alert('Payment successfully')</script>";
          echo "<script>window.location.replace('index.php')</script>";
      }catch (PDOException $e) {
          echo "<script>alert('Error: Payment failed')</script>";
-         //echo "<script>window.location.replace('payment_details.php')</script>";
          echo "<script>window.location.replace('payment_details.php?email='.$email_add.'&amount='.$amount)</script>";
      }
    } 
    else {
       echo "<script>alert('Please fill in all the required fields')</script>";
    }
+}
+
+function generateOrderReceiptId() {
+    $prefix = 'ORD-';
+    $randomId = uniqid();
+    return $prefix . $randomId;
 }
 
 function sendMail($recipientEmail){
@@ -108,6 +134,9 @@ function sendMail($recipientEmail){
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
    <style>
+        body{
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         /* CSS for Payment Form */
         .form-container {
         width: 50%;
@@ -117,11 +146,6 @@ function sendMail($recipientEmail){
 
         .form-container label {
         font-weight: bold;
-        }
-        .form-container input,
-        .form-container textarea,
-        .form-container select, {
-         margin-bottom:20px;
         }
 
         .form-container input[type=text],
@@ -205,7 +229,7 @@ function sendMail($recipientEmail){
         font-weight: bold;
         }
         /* Additional Styles */
-        .container {
+        .containerr {
         display: flex;
         margin-top:20px;
         margin-bottom:20px;
@@ -303,42 +327,68 @@ function sendMail($recipientEmail){
         }
 
    </style>
+
+    <?php 
+        $sqladdress = "SELECT * FROM `tbl_address` JOIN `tbl_users` ON tbl_address.user_id = tbl_users.user_id WHERE tbl_users.user_email = '$useremail' AND tbl_address.default = 'Yes'";
+        $stmt = $conn->prepare($sqladdress);
+        $stmt->execute();
+        $addressrow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($addressrow) {
+            $address1 = $addressrow['address1'];
+            $address2 = $addressrow['address2'];
+            $address3 = $addressrow['address3'];
+            $city = $addressrow['city'];
+            $state = $addressrow['state'];
+            $country = $addressrow['country'];
+            $postalcode = $addressrow['postalcode'];
+        }else{
+            $address1 = '';
+            $address2 = '';
+            $address3 = '';
+            $city = '';
+            $state = '';
+            $country = '';
+            $postalcode = '';
+        }
+    ?>
+
    <body>
-      <div class="container">
+      <div class="containerr container">
          <div class="form-container">
             <h3>Payment Details</h3>
             <form action="" method="post" enctype="multipart/form-data">
                <label for="full-name">Full Name</label>
                <input type="text" id="full-name" name="full_name" required>
                <label for="email">Email</label>
-               <input type="email" id="email" name="email" required>
+               <input type="email" id="email" name="email" value="<?php echo $useremail; ?>" required>
                <label for="billing-address">Billing Address</label>
-               <textarea id="billing-address" name="billing_address" required></textarea>
+               <textarea id="billing-address" name="billing_address" required><?php echo $address1.' '.$address2.' '.$address3; ?></textarea>
                <label for="delivery-address">Delivery Address</label>
                <textarea id="delivery-address" name="delivery_address" required></textarea>
                <label for="city">City</label>
-               <input type="text" id="city" name="city" required>
+               <input type="text" id="city" name="city" value="<?php echo $city; ?>" required>
                <label for="state">State</label>
                <select id="state" name="state" required>
                   <option value="">Select State</option>
-                  <option value="Perak">Perak</option>
-                  <option value="Kedah">Kedah</option>
-                  <option value="Johor">Johor</option>
-                  <option value="Kelantan">Kelantan</option>
-                  <option value="Melaka">Melaka</option>
-                  <option value="Perlis">Perlis</option>
-                  <option value="Penanag">Penanag</option>
-                  <option value="Pahang">Pahang</option>
-                  <option value="Negeri Sembilan">Negeri Sembilan</option>
-                  <option value="Terengganu">Terengganu</option>
-                  <option value="Sabah">Sabah</option>
-                  <option value="Sarawak">Sarawak</option>
-                  <option value="Selangor">Selangor</option>
+                  <option value="Perak" <?php if ($state == "Perak") echo "selected"; ?>>Perak</option>
+                  <option value="Kedah" <?php if ($state == "Kedah") echo "selected"; ?>>Kedah</option>
+                  <option value="Johor" <?php if ($state == "Johor") echo "selected"; ?>>Johor</option>
+                  <option value="Kelantan" <?php if ($state == "Kelantan") echo "selected"; ?>>Kelantan</option>
+                  <option value="Melaka" <?php if ($state == "Melaka") echo "selected"; ?>>Melaka</option>
+                  <option value="Perlis" <?php if ($state == "Perlis") echo "selected"; ?>>Perlis</option>
+                  <option value="Penang" <?php if ($state == "Penang") echo "selected"; ?>>Penang</option>
+                  <option value="Pahang" <?php if ($state == "Pahang") echo "selected"; ?>>Pahang</option>
+                  <option value="Negeri Sembilan" <?php if ($state == "Negeri Sembilan") echo "selected"; ?>>Negeri Sembilan</option>
+                  <option value="Terengganu" <?php if ($state == "Terengganu") echo "selected"; ?>>Terengganu</option>
+                  <option value="Sabah" <?php if ($state == "Sabah") echo "selected"; ?>>Sabah</option>
+                  <option value="Sarawak" <?php if ($state == "Sarawak") echo "selected"; ?>>Sarawak</option>
+                  <option value="Selangor" <?php if ($state == "Selangor") echo "selected"; ?>>Selangor</option>
                </select>
                <label for="zip-code">Zip Code</label>
-               <input type="text" id="zip-code" name="zip_code" required>
+               <input type="text" id="zip-code" name="zip_code" value="<?php echo $postalcode; ?>" required>
                <label for="phone">Phone Number</label>
-               <input type="text" id="phone" name="phone" required>
+               <input type="text" id="phone" name="phone" value="<?php echo $user_phone; ?>" required>
                <label for="remark">Remark</label>
                <textarea id="remark" name="remark"></textarea>
                <label for="receipt">Receipt</label>
@@ -375,14 +425,14 @@ function sendMail($recipientEmail){
                      echo "<tr>
                            <td>
                                  <div class='w3-center w3-padding-small' id='bookcard_$bookId'>
-                                    <div class='w3-card w3-round-large'>
+                                    
                                        <div class='w3-padding-small'>
-                                             <a href='book_details.php?bookid=$bookId'>
+                                             <a href='bookdetails.php?bookid=$bookId'>
                                                 <img class='w3-container w3-image' src='images/books/$bookId.jpg' onerror='this.onerror=null; this.src='images/books/default.jpg';' style='max-height:150px; max-width:180px;'>
                                              </a>
                                        </div>
                                        <div>$bookTitle</div>
-                                    </div>
+                                    
                                  </div>
                            </td>
                            <td>$quantity</td>
@@ -427,6 +477,8 @@ function sendMail($recipientEmail){
             <button class="cancel-btn"onclick="cancelOrder()">Cancel Order</button>
          </div>
       </div>
+      <hr style="color: rgba(0, 0, 0, 0.4);">
+
       <footer>
         <div class="footer_info">
             <div class="quicklinks">
@@ -443,8 +495,8 @@ function sendMail($recipientEmail){
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="booklist.php">All</a></li>
-                    <li><a href="#">New Arrival</a></li>
-                    <li><a href="#">Best Seller</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
                 </ul>
             </div>
             <div class="contact_us">

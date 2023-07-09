@@ -53,6 +53,13 @@ if (isset($_GET['submit'])) {
             $stmtupdatecart->execute();
         }
     }
+    if ($_GET['submit'] == "delete") {
+        $deletecart = "DELETE FROM tbl_carts WHERE user_email = :useremail AND book_id = :bookid";
+        $stmtdeletecart = $conn->prepare($deletecart);
+        $stmtdeletecart->bindParam(':useremail', $useremail);
+        $stmtdeletecart->bindParam(':bookid', $bookid);
+        $stmtdeletecart->execute();
+    }
 }
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts INNER JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE tbl_carts.user_email = :useremail");
