@@ -337,6 +337,15 @@ if (isset($_POST['addaddress'])) {
                 // Show the "Edit Profile" section
                 $(".orders-section").show();
             });
+            $("#wishlist").click(function() {
+                // Hide the "My Orders" section
+                $(".edit-profile-section").hide();
+                $(".address-section").hide();
+                $(".orders-section").hide();
+
+                // Show the "Edit Profile" section
+                $(".wishlist-section").show();
+            });
         });
     </script>
 </head>
@@ -360,6 +369,9 @@ if (isset($_POST['addaddress'])) {
                         </div>
                         <div style="margin-bottom: 20px;">
                             <a href="#" id="orders" class="element" style="margin-bottom: 30px;"><i class="fas fa-shopping-bag" style="margin-right: 15px;"></i> My Orders</a>
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <a href="#" id="wishlist" class="element" style="margin-bottom: 30px;"><i class="fas fa-heart" style="margin-right: 15px;"></i> My Wishlist</a>
                         </div>
                     </div>
                 </div>
@@ -407,6 +419,39 @@ if (isset($_POST['addaddress'])) {
                                             <hr>
                                             <div class="order-total">
                                                 <p class="card-text" style="font-size: 20px;"><b>Order Total: RM <?php echo number_format($order['order_paid'], 2); ?></b></p>
+                                            </div>
+                                        </div>
+                                    </div><?php }
+                                    } ?>
+                        </div>
+                        <!--My Wishlist-->
+                        <?php
+                        $email = $row['user_email'];
+                        $sqlwishlist = "SELECT w.*, b.* FROM tbl_wishlist w JOIN tbl_books b ON w.book_id = b.book_id WHERE w.user_email = :email";
+                        $stmt = $conn->prepare($sqlwishlist);
+                        $stmt->bindValue(':email', $email);
+                        $stmt->execute();
+                        $rows = $stmt->fetchAll();
+                        ?>
+                        <div class="wishlist-section">
+                            <h4 class="w3-center" style="font-weight: 600; margin-top:20px;">My Wishlist</h4>
+                            <hr>
+                            <?php if (empty($rows)) echo "<p style='font-size: large;'>No book found.</p>";
+                            else {
+                                foreach ($rows as $wishlist) { ?>
+                                    <?php ?><div class="card mt-3" style="margin-bottom: 30px;">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <!-- Book Image -->
+                                                    <img src="images/books/<?php echo $wishlist['book_id']; ?>.jpg" alt="Book Image" class="img-fluid" style="width: 60%; margin-bottom: 10px;">
+                                                </div>
+                                                <div class="col-md-6" style="text-align: left;">
+                                                    <!-- Order Details -->
+                                                    <h3 class="card-title reduce" style="margin-top: 30px;"><b><?php echo $wishlist['book_title']; ?></b></h3>
+                                                    <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo number_format($wishlist['book_price'], 2); ?></p>
+                                                    <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Quantity: <?php echo $wishlist['book_qty']; ?></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div><?php }
