@@ -245,18 +245,6 @@ function subString($str)
                 text-align: center;
                 font-size:20px;
             }
-            .book-title a {
-                text-decoration: none;
-                color: black;
-                font-weight: bold;
-                font-size: 19px;
-                transition: color 0.3s, text-decoration 0.3s;
-            }
-
-            .book-title a:hover {
-                color: #3286AA;
-                text-decoration: underline;
-            }
 </style>
 
 <body>
@@ -281,7 +269,7 @@ function subString($str)
                 echo "<div class='w3-center w3-padding-small' id='bookcard_$bookid'><div class='w3-card w3-round-large carts'>
                     <div class='w3-padding-small'><a href='bookdetails.php?bookid=$bookid'><img class='w3-container w3-image' 
                     src='images/books/$bookid.jpg' onerror=\"this.onerror=null; this.src='images/books/default.jpg';\" style='min-height:240px; margin-top:10px;'></a></div>
-                    <b><span style='font-size: 18px;' class='book-title'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></span></b><br>RM " . number_format($book_price, 2) . " / unit<br>
+                    <b><span style='font-size: 18px;'>$book_title</span></b><br>RM " . number_format($book_price, 2) . " / unit<br>
                     <div class='box'>
                         <input type='button' class='w3-button w3-white w3-border w3-border-secondary w3-round-large remove-button' id='button_id' value='-' onClick='removeCart($bookid,$book_price);'>
                         <label id='qtyid_$bookid'>$book_qty</label>

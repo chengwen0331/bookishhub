@@ -59,6 +59,39 @@ if (isset($_GET['submit']) && $_GET['submit'] == "cart" && isset($_GET['bookid']
     }
 }
 
+if (isset($_GET['submit']) && $_GET['submit'] == "wishlist" && isset($_GET['bookid'])) {
+    if ($useremail != "Guest") {
+        $bookid = $_GET['bookid'];
+        $stmt = $conn->prepare("SELECT book_qty FROM tbl_books WHERE book_id = '$bookid'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $bookqty = $result['book_qty'];
+
+        // Check if the book is already in the wishlist
+        $stmt = $conn->prepare("SELECT * FROM tbl_wishlist WHERE user_email = '$useremail' AND book_id = '$bookid'");
+        $stmt->execute();
+        $number_of_rows = $stmt->rowCount();
+
+        if ($number_of_rows > 0) {
+            echo "<script>alert('Book already in wishlist')</script>";
+            echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
+        } else {
+            $addwishlist = "INSERT INTO `tbl_wishlist`(`user_email`, `book_id`, `book_qty`) VALUES ('$useremail', '$bookid', '$bookqty')";
+            try {
+                $conn->exec($addwishlist);
+                echo "<script>alert('Added to wishlist')</script>";
+                echo "<script>window.location.replace('bookdetails.php?bookid=$bookid')</script>";
+            } catch (PDOException $e) {
+                echo "<script>alert('Failed to add to wishlist')</script>";
+            }
+        }
+    } else {
+        echo "<script>alert('Please login or register')</script>";
+        echo "<script>window.location.replace('login.php')</script>";
+    }
+}
+
+
 // Use prepared statements to prevent SQL injection
 $sqlquery = "SELECT * FROM tbl_books WHERE book_id = :bookid";
 $stmt = $conn->prepare($sqlquery);
@@ -265,10 +298,12 @@ if (count($rows) > 0) {
 </div>
         
 <p>
-    <a href='bookdetails.php?bookid=$bookid&submit=cart&bookqty=' + quantityInput.value' class='cartbutton w3-round-small' id='add-to-cart-button'>
-    <i class='fas fa-cart-plus'></i> Add to cart
-</a>
-
+    <a href='bookdetails.php?bookid=$bookid&submit=cart&bookqty=' + quantityInput.value' class='cartbutton w3-round-small' id='add-to-cart-button' style='margin-right: 10px;'>
+        <i class='fas fa-cart-plus'></i> Add to cart
+    </a>
+    <a href='bookdetails.php?bookid=$bookid&submit=wishlist' class='cartbutton w3-round-small' id='add-to-wishlist-button'>
+        <i class='fas fa-heart'></i> Wishlist
+    </a>
 </p>
             ";
                 ?>
