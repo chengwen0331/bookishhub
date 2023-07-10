@@ -90,13 +90,13 @@ if (isset($_POST['addaddress'])) {
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="shortcut icon" type="image/jpeg" href="images/logo1.jpeg">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/script.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
 
     <style>
@@ -432,6 +432,22 @@ if (isset($_POST['addaddress'])) {
                         $stmt->bindValue(':email', $email);
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
+                        $number_of_rows = $stmt->rowCount();
+                            if ($number_of_rows > 0) {
+                                if (isset($_GET['submit'])) {
+                                    if ($_GET['submit'] == "delete") {
+                                        $bookid = $_GET['bookid'];
+                                            $deletewishlist= "DELETE FROM `tbl_wishlist` WHERE user_email = '$useremail' AND book_id = '$bookid'";
+                                            $conn->exec($deletewishlist);
+                                            echo "<script>alert('Book removed')</script>";
+                            
+                                    }
+                                }
+                            } else {
+                                echo "<script>alert('Your wishlist is currently empty')</script>";
+                                echo "<script> window.location.replace('index.php')</script>";
+                                exit;
+                            }
                         ?>
                         <div class="wishlist-section">
                             <h4 class="w3-center" style="font-weight: 600; margin-top:20px;">My Wishlist</h4>
@@ -451,6 +467,10 @@ if (isset($_POST['addaddress'])) {
                                                     <h3 class="card-title reduce" style="margin-top: 30px;"><b><?php echo $wishlist['book_title']; ?></b></h3>
                                                     <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo number_format($wishlist['book_price'], 2); ?></p>
                                                     <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Quantity: <?php echo $wishlist['book_qty']; ?></p>
+                                                </div>
+                                                <div class="status-container">
+                                                    <span style="text-align: start;"></span>
+                                                    <span class="status"><i class='fa-solid fa-trash-can' style='cursor: pointer; color: black;' onClick='deleteList($bookid);'></i></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -559,6 +579,38 @@ if (isset($_POST['addaddress'])) {
                 preview.src = 'images/userimg.png';
             }
         }
+        function deleteList($bookid) {
+                // Update the quantity label on the frontend immediately
+                //const qtyLabel = document.getElementById("qtyid_" + bookid);
+                //const currentQty = parseInt(qtyLabel.innerHTML);
+
+                //qtyLabel.innerHTML = ""; // Remove the quantity label
+                //qtyLabel.parentNode.parentNode.remove();
+                window.location.replace("profile.php");
+                // Remove the item row from the cart table
+
+                // Perform the AJAX request to update the cart on the backend
+                jQuery.ajax({
+                    method: "GET",
+                    url: "updatewishlist.php",
+                    data: "bookid=" + bookid + "&submit=delete",
+                    cache: false,
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        if (response.status === "success") {
+                            // Update other elements on the frontend if needed
+                            
+                        } else {
+                            alert("Failed");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error here
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
     </script>
 
     <br><br>
