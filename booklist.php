@@ -339,21 +339,36 @@ function subString($str)
                 $book_qty = $book['book_qty'];
 
                 // Displaying book information in a card format with a link to details page
-                echo "
-                <div class='w3-center w3-padding-small' style='min-height:380px;'>
-                    <div class='w3-card w3-round-large'>
-                        <div class='w3-padding-small'>
-                            <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
+                if ($book_qty == 0) {
+                    echo "
+                    <div class='w3-center w3-padding-small' style='min-height:380px;'>
+                        <div class='w3-card w3-round-large'>
+                            <div class='w3-padding-small'>
+                                <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
+                            </div>
+                            <div class='w3-description'>
+                                <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                                <p style='color: red; font-size: 18px;'>Out of Stock</p>
+                            </div>
                         </div>
-                        <div class='w3-description'>
-                        <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
-                            <p>RM " . number_format($book_price, 2) . " / $book_qty avail</p>
-                            <a href='booklist.php?bookid=$bookid&submit=cart' class='cartbutton w3-round-small' style='margin-bottom: auto;'>
-                                <i class='fas fa-cart-plus'></i> Add to cart
-                            </a>
+                    </div>";
+                }else{
+                    echo "
+                    <div class='w3-center w3-padding-small' style='min-height:380px;'>
+                        <div class='w3-card w3-round-large'>
+                            <div class='w3-padding-small'>
+                                <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
+                            </div>
+                            <div class='w3-description'>
+                            <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                                <p>RM " . number_format($book_price, 2) . " / $book_qty avail</p>
+                                <a href='booklist.php?bookid=$bookid&submit=cart' class='cartbutton w3-round-small' style='margin-bottom: auto;'>
+                                    <i class='fas fa-cart-plus'></i> Add to cart
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                </div>";
+                    </div>";
+                }
             }
             ?>
         </div>

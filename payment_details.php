@@ -53,19 +53,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
          foreach ($cartItems as $item) {
             $bookid = $item['book_id'];
+            $bookname = $item['book_title'];
+            $ttlqty=$item['book_qty'];
             $qty = intval($item['cart_qty']);
+            $avail = $ttlqty - $qty;
             $bookPrice = $item['book_price'];
             $bookTtlPrice = $qty * $bookPrice ;
 
             $ordersql ="INSERT INTO `tbl_orders`(`order_receiptid`, `order_bookid`, `order_qty`, `order_custid`, `order_paid`, `order_status`) VALUES ('$orderReceiptId','$bookid','$qty','$useremail','$bookTtlPrice','$orderstatus')";
             $conn->exec($ordersql);
+
+            $minusQtyBook= "UPDATE `tbl_books` SET `book_qty`='$avail' WHERE `book_id` = '$bookid'";
+            $conn->exec($minusQtyBook);
+
+            $minusQtyBest="UPDATE `tbl_bestbooks` SET `book_qty`='$avail' WHERE `book_title` = '$bookname'";
+            $conn->exec($minusQtyBest);
+
+            $minusQtyNew="UPDATE `tbl_newbooks` SET `book_qty`='$avail' WHERE `book_title` = '$bookname'";
+            $conn->exec($minusQtyNew);
          }
          
-         
-
          sendMail($email);
          $clearCartSql = "DELETE FROM `tbl_carts` WHERE user_email = '$email_add'";
          $conn->exec($clearCartSql);
+
          echo "<script>alert('Payment successfully')</script>";
          echo "<script>window.location.replace('index.php')</script>";
      }catch (PDOException $e) {

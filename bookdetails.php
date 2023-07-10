@@ -287,28 +287,40 @@ if (count($rows) > 0) {
                 <p style='ext-align: justify;'>$book_description</p>
             
                 <p style='font-size:160%; color:rgb(19, 96, 174); font-weight: 900; padding: 10px 0px 10px 0px;'>RM " . number_format($book_price, 2) . "</p>
-               <div class='w3-col w3-margin-bottom'>
-    <label class='w3-col mb-2 d-block' style='color:rgb(19, 96, 174); font-weight: 900;'>Quantity</label>
-    <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
-        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
-            <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
-        </button>
-        <input type='text' id='quantity-input' value='1' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
-        <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
-            <i class='fa fa-plus'></i>
-        </button>
-    </div>
-</div>
-        
-<p>
-    <a href='bookdetails.php?bookid=$bookid&submit=cart&bookqty=' + quantityInput.value' class='cartbutton w3-round-small' id='add-to-cart-button' style='margin-right: 10px;'>
-        <i class='fas fa-cart-plus'></i> Add to cart
-    </a>
-    <a href='bookdetails.php?bookid=$bookid&submit=wishlist' class='cartbutton w3-round-small' id='add-to-wishlist-button'>
-        <i class='fas fa-heart'></i> Wishlist
-    </a>
-</p>
-            ";
+               
+                ";
+                if($book_qty<=0){
+                    echo"<p style='color: red; font-size:xx-large; margin-top:30px;'><b>Out of stock</b></p>
+                            <p>
+                            <a href='bookdetails.php?bookid=$bookid&submit=wishlist' class='cartbutton w3-round-small' id='add-to-wishlist-button'>
+                                <i class='fas fa-heart'></i> Wishlist
+                            </a>
+                        </p>";
+                }else {
+                    echo"<div class='w3-col w3-margin-bottom'>
+                    <label class='w3-col mb-2 d-block' style='color:rgb(19, 96, 174); font-weight: 900;'>Quantity</label>
+                        <div class='w3-input-group w3-margin-bottom' style='width: 170px; display: flex; align-items: center;'>
+                            <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon1' data-mdb-ripple-color='dark' style='margin-right: 10px;'>
+                                <i class='fa fa-minus' style='display: flex; align-items: center; justify-content: center;'></i>
+                            </button>
+                            <input type='text' id='quantity-input' value='1' class='w3-input w3-center w3-border w3-border-secondary' placeholder='1' aria-label='Example text with button addon' aria-describedby='button-addon1' style='margin-right: 10px;' readonly>
+                            <button class='w3-button w3-white w3-border w3-border-secondary w3-round-large' type='button' id='button-addon2' data-mdb-ripple-color='dark' style='display: flex; align-items: center; justify-content: center;'>
+                                <i class='fa fa-plus'></i>
+                            </button>
+                        </div>
+                    </div>
+                            
+                    <p>
+                        <a href='bookdetails.php?bookid=$bookid&submit=cart&bookqty=' + quantityInput.value' class='cartbutton w3-round-small' id='add-to-cart-button' style='margin-right: 10px;'>
+                            <i class='fas fa-cart-plus'></i> Add to cart
+                        </a>
+                        <a href='bookdetails.php?bookid=$bookid&submit=wishlist' class='cartbutton w3-round-small' id='add-to-wishlist-button'>
+                            <i class='fas fa-heart'></i> Wishlist
+                        </a>
+                    </p>";
+                }
+    
+            
                 ?>
             </div>
         </div>

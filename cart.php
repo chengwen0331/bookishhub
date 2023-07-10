@@ -8,68 +8,24 @@ if (isset($_SESSION['sessionid'])) {
     $user_phone = $_SESSION['user_phone'];
 } else {
     echo "<script>alert('Please login or register')</script>";
-    echo "<script> window.location.replace('login.php')</script>";
+    echo "<script>window.location.replace('login.php')</script>";
     exit;
 }
+
 $sqlcart = "SELECT * FROM tbl_carts WHERE user_email = '$useremail'";
 $stmt = $conn->prepare($sqlcart);
 $stmt->execute();
 $number_of_rows = $stmt->rowCount();
-if ($number_of_rows > 0) {
-    if (isset($_GET['submit'])) {
-        if ($_GET['submit'] == "add") {
-            $bookid = $_GET['bookid'];
-            $qty = $_GET['qty'];
-        
-            // Retrieve the quantity available for the book from the database
-            $stmt = $conn->prepare("SELECT book_qty FROM tbl_books WHERE book_id = '$bookid'");
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $quantityAvailable = $result['book_qty'];
-        
-            // Check if the added quantity plus the current quantity exceeds the quantity available
-            if (($qty + 1) > $quantityAvailable) {
-                echo "<script>alert('Quantity exceeds availability')</script>";
-            } else {
-                $cartqty = $qty + 1;
-                $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
-                $conn->exec($updatecart);
-                echo "<script>alert('Cart updated')</script>";
-            }
-        }
-        if ($_GET['submit'] == "remove") {
-            $bookid = $_GET['bookid'];
-            $qty = $_GET['qty'];
-            if ($qty == 0) {
-                $updatecart = "DELETE FROM `tbl_carts` WHERE user_email = '$useremail' AND book_id = '$bookid'";
-                $conn->exec($updatecart);
-                echo "<script>alert('Book removed')</script>";
-            } else {
-                $cartqty = $qty - 1;
-                $updatecart = "UPDATE `tbl_carts` SET `cart_qty`= '$cartqty' WHERE user_email = '$useremail' AND book_id = '$bookid'";
-                $conn->exec($updatecart);
-                echo "<script>alert('Removed')</script>";
-            }
-        }
-        if ($_GET['submit'] == "delete") {
-            $bookid = $_GET['bookid'];
-            $qty = $_GET['qty'];
-                $deletecart = "DELETE FROM `tbl_carts` WHERE user_email = '$useremail' AND book_id = '$bookid'";
-                $conn->exec($deletecart);
-                $book_total = 0;
-                echo "<script>alert('Book removed')</script>";
- 
-        }
-    }
-} else {
+
+if ($number_of_rows <= 0) {
     echo "<script>alert('Your cart is currently empty')</script>";
-    echo "<script> window.location.replace('index.php')</script>";
+    echo "<script>window.location.replace('index.php')</script>";
     exit;
 }
 
 $stmtqty = $conn->prepare("SELECT * FROM tbl_carts INNER JOIN tbl_books ON tbl_carts.book_id = tbl_books.book_id WHERE tbl_carts.user_email = '$useremail'");
 $stmtqty->execute();
-$rowsqty = $stmtqty->fetchAll(PDO::FETCH_ASSOC); // Fetch associative array directly
+$rowsqty = $stmtqty->fetchAll(PDO::FETCH_ASSOC);
 $carttotal = count($rowsqty);
 
 function subString($str)
@@ -245,6 +201,18 @@ function subString($str)
                 text-align: center;
                 font-size:20px;
             }
+            .book-title a {
+                text-decoration: none;
+                color: black;
+                font-weight: bold;
+                font-size: 19px;
+                transition: color 0.3s, text-decoration 0.3s;
+            }
+
+            .book-title a:hover {
+                color: #3286AA;
+                text-decoration: underline;
+            }
 </style>
 
 <body>
@@ -269,7 +237,7 @@ function subString($str)
                 echo "<div class='w3-center w3-padding-small' id='bookcard_$bookid'><div class='w3-card w3-round-large carts'>
                     <div class='w3-padding-small'><a href='bookdetails.php?bookid=$bookid'><img class='w3-container w3-image' 
                     src='images/books/$bookid.jpg' onerror=\"this.onerror=null; this.src='images/books/default.jpg';\" style='min-height:240px; margin-top:10px;'></a></div>
-                    <b><span style='font-size: 18px;'>$book_title</span></b><br>RM " . number_format($book_price, 2) . " / unit<br>
+                    <b><span style='font-size: 18px;' class='book-title'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></span></b><br>RM " . number_format($book_price, 2) . " / unit<br>
                     <div class='box'>
                         <input type='button' class='w3-button w3-white w3-border w3-border-secondary w3-round-large remove-button' id='button_id' value='-' onClick='removeCart($bookid,$book_price);'>
                         <label id='qtyid_$bookid'>$book_qty</label>
@@ -339,6 +307,7 @@ function addCart(bookid, book_price) {
         }
     });
 }
+
 
 function removeCart(bookid, book_price) {
     // Update the quantity label on the frontend immediately

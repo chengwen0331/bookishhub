@@ -34,11 +34,10 @@ if (isset($_GET['search'])) {
         $stmt = $conn->prepare($sqlsearch);
         $stmt->bindValue(':search', '%' . $search . '%');
         $stmt->execute();
-        
+
         if ($stmt->rowCount() > 0) {
             $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
-
     } else {
         echo "<script>alert('Please enter the search keyword.');</script>";
         // Database query to fetch all books
@@ -55,7 +54,7 @@ if (isset($_GET['search'])) {
     $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 if (isset($_GET['submit']) && $_GET['submit'] == "cart") {
-    if ($useremail != "Guest"){
+    if ($useremail != "Guest") {
         $bookid = $_GET['bookid'];
         $cartqty = "1";
         $stmt = $conn->prepare("SELECT * FROM tbl_carts WHERE user_email = '$useremail' AND book_id = '$bookid'");
@@ -63,8 +62,8 @@ if (isset($_GET['submit']) && $_GET['submit'] == "cart") {
         $number_of_rows = $stmt->rowCount();
         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $rows = $stmt->fetchAll();
-        if ($number_of_rows > 0){
-            foreach ($rows as $carts){
+        if ($number_of_rows > 0) {
+            foreach ($rows as $carts) {
                 $cartqty = $carts['cart_qty'];
             }
             $cartqty = $cartqty + 1;
@@ -72,20 +71,17 @@ if (isset($_GET['submit']) && $_GET['submit'] == "cart") {
             $conn->exec($updatecart);
             echo "<script>alert('Cart updated')</script>";
             echo "<script> window.location.replace('booklist.php')</script>";
-        }
-        else{
+        } else {
             $addcart = "INSERT INTO `tbl_carts`(`user_email`, `book_id`, `cart_qty`) VALUES ('$useremail','$bookid','$cartqty')";
-            try{
+            try {
                 $conn->exec($addcart);
                 echo "<script>alert('Success')</script>";
                 echo "<script> window.location.replace('booklist.php')</script>";
-            }
-            catch(PDOException $e){
+            } catch (PDOException $e) {
                 echo "<script>alert('Failed')</script>";
             }
         }
-    }
-    else{
+    } else {
         echo "<script>alert('Please login or register')</script>";
         echo "<script> window.location.replace('login.php')</script>";
     }
@@ -225,80 +221,87 @@ function subString($str)
         }
 
         .footer_info {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                grid-gap: 20px;
-                justify-items: center;
-                align-items: flex-start;
-                padding: 20px;
-                background-color: #fff;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-                margin-top:20px;
-            }
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+            justify-items: center;
+            align-items: flex-start;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
 
-            .quicklinks ul,
-            .contact_info {
-                list-style: none;
-                padding: 0;
-            }
+        .quicklinks ul,
+        .contact_info {
+            list-style: none;
+            padding: 0;
+        }
 
-            .quicklinks h2,
-            .contact_us h2 {
-                position: relative;
-                margin-bottom: 15px;
-            }
-            .quicklinks h2:after,
-            .contact_us h2:after {
-                content: "";
-                position: absolute;
-                left: 0;
-                bottom: -5px;
-                height: 4px;
-                width: 50px;
-                background-color: #cc2e2e;
-            }
+        .quicklinks h2,
+        .contact_us h2 {
+            position: relative;
+            margin-bottom: 15px;
+        }
 
-            .quicklinks ul li,
-            .contact_info li {
-                margin-bottom: 10px;
-            }
+        .quicklinks h2:after,
+        .contact_us h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            height: 4px;
+            width: 50px;
+            background-color: #cc2e2e;
+        }
 
-            .quicklinks ul li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .quicklinks ul li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .contact_info li {
-                display: flex;
-                margin-bottom: 10px;
-                }
-            .contact_info span {
-                margin-right: 8px;
-                display: flex;
-            }
+        .quicklinks ul li,
+        .contact_info li {
+            margin-bottom: 10px;
+        }
 
-            .contact_info p {
-                margin: 0;
-                display: flex;
-                align-items: center;
-            }
-            .contact_info li a {
-                text-decoration: none;
-                color: #000;
-            }
-            .contact_info li a:hover {
-                text-decoration: underline;
-                color: blue;
-            }
-            .copy-right {
-                background-color: #f2f2f2;
-                padding: 20px;
-                text-align: center;
-                font-size:20px;
-            }
+        .quicklinks ul li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .quicklinks ul li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .contact_info li {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .contact_info span {
+            margin-right: 8px;
+            display: flex;
+        }
+
+        .contact_info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact_info li a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .contact_info li a:hover {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .copy-right {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
     </style>
 
 </head>
@@ -310,15 +313,15 @@ function subString($str)
 
     <div class="w3-main w3-content w3-padding" style="max-width:1000px;margin-top:20px">
         <div class="w3-container w3-center">
-        <div style="display: inline-block; border-bottom: 4px solid rgb(46,135,174);">
-            <p style="font-size: 36px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
-                Latest Arrival
-            </p>
-        </div>
+            <div style="display: inline-block; border-bottom: 4px solid rgb(46,135,174);">
+                <p style="font-size: 36px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                    Latest Arrival
+                </p>
+            </div>
 
             <?php if (count($books) == 0 && !empty($search)) {
-                echo '<div class="alert alert-danger"><em>The keyword "'.$search.'" is not found. Please try again.</em></div>';
-            }?>
+                echo '<div class="alert alert-danger"><em>The keyword "' . $search . '" is not found. Please try again.</em></div>';
+            } ?>
         </div>
     </div>
 
@@ -342,7 +345,21 @@ function subString($str)
                 $book_qty = $book['book_qty'];
 
                 // Displaying book information in a card format with a link to details page
-                echo "
+                if ($book_qty == 0) {
+                    echo "
+                    <div class='w3-center w3-padding-small' style='min-height:380px;'>
+                        <div class='w3-card w3-round-large'>
+                            <div class='w3-padding-small'>
+                                <img class='w3-container w3-image' src='images/books/$bookid.jpg' onerror='this.onerror=null; this.src='images/logo1.jpeg'; style='min-height:240px; margin-top:15px;'>
+                            </div>
+                            <div class='w3-description'>
+                                <h6 class='book-title' style='margin-top:10px;'><a href='bookdetails.php?bookid=$bookid'>$book_title</a></h6>
+                                <p style='color: red; font-size: 18px;'>Out of Stock</p>
+                            </div>
+                        </div>
+                    </div>";
+                } else {
+                    echo "
                 <div class='w3-center w3-padding-small' style='min-height:380px;'>
                     <div class='w3-card w3-round-large'>
                         <div class='w3-padding-small'>
@@ -357,11 +374,12 @@ function subString($str)
                         </div>
                     </div>
                 </div>";
+                }
             }
             ?>
         </div>
     </div>
-    
+
     <footer>
         <div class="footer_info">
             <div class="quicklinks">
@@ -399,7 +417,7 @@ function subString($str)
                     </li>
                 </ul>
             </div>
-        </div>    
+        </div>
         <div class="copy-right">
             <p>
                 Copyright © 2023 | BookishHub®
@@ -407,7 +425,7 @@ function subString($str)
         </div>
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
