@@ -138,6 +138,9 @@ if (count($rows) > 0) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <script src="../js/script.js"></script>
     <style>
+        body{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         .footer_info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -244,13 +247,13 @@ if (count($rows) > 0) {
 
 <body>
 
-    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:75px">
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:75px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
         <div class="w3-row w3-card">
             <div class="w3-half w3-center">
                 <img class="w3-image w3-margin w3-center" style="height:100%;width:100%;max-width:330px; padding:20px 0px 0px 0px" src="images/books/<?php echo $bookid ?>.jpg">
             </div>
-            <div class="w3-half w3-container">
+            <div class="w3-half w3-container" style="font-size: medium;">
                 <?php
                 echo "<h3 class='w3-center' style='padding:5px 0px 5px 0px'><b>$book_title</h3></b>
                 <div>

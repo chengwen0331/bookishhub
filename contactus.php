@@ -2,25 +2,80 @@
 include_once("dbconnect.php");
 include "menu.php";
 
-/*if (isset($_GET['submit'])) {
-    include_once("dbconnect.php");
-    if ($_GET['submit'] == "cart") {
-        if ($useremail == "Guest") {
-            echo "<script>alert('Please login or register')</script>";
-            echo "<script> window.location.replace('login.php')</script>";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require './PHPMailer/src/Exception.php';
+require './PHPMailer/src/PHPMailer.php';
+require './PHPMailer/src/SMTP.php';
+
+$useremail = $_SESSION['user_email'];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    try{
+        if (isset($_GET['option']) && isset($_GET['name']) && isset($_GET['email']) && isset($_GET['phone']) && isset($_GET['message'])) {
+            $option = $_GET['option'];
+            $name = $_GET['name'];
+            $email = $_GET['email'];
+            $phone = $_GET['phone'];
+            $text = $_GET['message'];
+
+            sendMail($useremail, $option, $name, $email, $phone, $text);
+            echo "<script>alert('Contact successfully')</script>";
+            echo "<script>window.location.replace('contactus.php')</script>";
         }
     }
-    if ($_GET['submit'] == "search") {
-        $search = $_GET['search'];
-        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
+    catch (PDOException $e) {
+        echo "<script>alert('Error: Contact failed')</script>";
+        echo "<script>window.location.replace('contactus.php'</script>";
     }
-} else {
-    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
+         
+    
 }
 
-$stmt = $conn->prepare($sqlquery);
-$stmt->execute();
-$rows = $stmt->fetchAll();*/
+function sendMail($useremail, $option, $name, $email, $phone, $text) {
+    $mail = new PHPMailer(true);
+    $mail->SMTPDebug = 0; // Disable verbose debug output
+    $mail->isSMTP(); // Send using SMTP
+    $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+    $mail->SMTPAuth = true; // Enable SMTP authentication
+    $mail->Username = 'bookishhubb@gmail.com';
+    $mail->Password = 'cpphpxzzxxjcsaxv'; //
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+    $mail->SMTPOptions = array(
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+        )
+    );
+
+    $from = $useremail;
+    $to = "bookishhubb@gmail.com";
+    $subject = 'BookishHub - Enquiry Received';
+    $message = "Enquiry received from customer.<br><br>";
+    $message .= "Option: " . $option . "<br>";
+    $message .= "Name: " . $name . "<br>";
+    $message .= "Email: " . $email . "<br>";
+    $message .= "Phone: " . $phone . "<br>";
+    $message .= "Message: " . $text . "<br>";
+    
+  $mail->setFrom($from, "BookishHub");
+  $mail->addAddress($to);                                             // Add a recipient
+    
+  // Content
+  $mail->isHTML(true);                                                // Set email format to HTML
+  $mail->Subject = $subject;
+  $mail->Body    = $message;
+
+  try {
+    $mail->send();
+  } catch (Exception $e) {
+    // Failed to send email, handle the error if needed
+  }
+}
 
 ?>
 
@@ -382,11 +437,18 @@ $rows = $stmt->fetchAll();*/
 <body>  
     <div class="box">
             <div class="contact-form">
-                <form action="">
+                <form action="contactus.php" method="GET">
                     <h3 class="title_1">Contact Us</h3>
                     <h3 style="font-size: 1.2rem;">Reason for Contact</h3>
                     <div class="reason">
-                        <select id="-name" class="select_reason"><option value="Retail Enquiry">Retail Enquiry</option><option value="Book Enquiry">Book Enquiry</option><option value="Billing &amp; Payment Enquiry">Billing &amp; Payment Enquiry</option><option value="Shipping Enquiry">Shipping Enquiry</option><option value="Promo &amp; Discount Enquiry">Promo &amp; Discount Enquiry</option><option value="Order Enquiry">Order Enquiry</option><option value="Others">Others</option></select>
+                        <select id="-name" class="select_reason" name="option">
+                            <option value="Retail Enquiry">Retail Enquiry</option>
+                            <option value="Book Enquiry">Book Enquiry</option>
+                            <option value="Billing &amp; Payment Enquiry">Billing &amp; Payment Enquiry</option>
+                            <option value="Shipping Enquiry">Shipping Enquiry</option>
+                            <option value="Promo &amp; Discount Enquiry">Promo &amp; Discount Enquiry</option>
+                            <option value="Order Enquiry">Order Enquiry</option>
+                            <option value="Others">Others</option></select>
                     </div>
                     <div class="input-container">
                         <input type="text" name="name" class="input" required>

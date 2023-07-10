@@ -305,6 +305,44 @@ if (isset($_POST['addaddress'])) {
             text-align: center;
             font-size: 20px;
         }
+
+        .book-title a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+
+        .book-title a:hover {
+            color: #3286AA;
+            text-decoration: underline;
+        }
+
+        .trash {
+            color: white;
+        }
+
+        .trash:hover {
+            color: white;
+        }
+
+        .delete-icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+        .delete-icon-circle:hover {
+            background-color: #C60014;
+        }
+
+        .delete-icon {
+            font-size: 16px;
+        }
     </style>
     <script>
         $(document).ready(function() {
@@ -316,6 +354,7 @@ if (isset($_POST['addaddress'])) {
                 // Hide the "My Orders" section
                 $(".orders-section").hide();
                 $(".address-section").hide();
+                $(".wishlist-section").hide();
 
                 // Show the "Edit Profile" section
                 $(".edit-profile-section").show();
@@ -325,6 +364,7 @@ if (isset($_POST['addaddress'])) {
                 // Hide the "My Orders" section
                 $(".orders-section").hide();
                 $(".edit-profile-section").hide();
+                $(".wishlist-section").hide();
 
                 // Show the "Edit Profile" section
                 $(".address-section").show();
@@ -333,6 +373,7 @@ if (isset($_POST['addaddress'])) {
                 // Hide the "My Orders" section
                 $(".edit-profile-section").hide();
                 $(".address-section").hide();
+                $(".wishlist-section").hide();
 
                 // Show the "Edit Profile" section
                 $(".orders-section").show();
@@ -405,7 +446,7 @@ if (isset($_POST['addaddress'])) {
                                                 </div>
                                                 <div class="col-md-6" style="text-align: left;">
                                                     <!-- Order Details -->
-                                                    <h3 class="card-title reduce" style="margin-top: 30px;"><b><?php echo $order['book_title']; ?></b></h3>
+                                                    <h3 class="card-title reduce book-title" style="margin-top: 30px;"><a href="bookdetails.php?bookid=<?php echo $order['book_id']; ?>"><b><?php echo $order['book_title']; ?></b></a></h3>
                                                     <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo number_format($order['book_price'], 2); ?></p>
                                                     <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Quantity: <?php echo $order['order_qty']; ?></p>
                                                     <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Order ID: <?php echo $order['order_receiptid']; ?></p>
@@ -432,50 +473,48 @@ if (isset($_POST['addaddress'])) {
                         $stmt->bindValue(':email', $email);
                         $stmt->execute();
                         $rows = $stmt->fetchAll();
-                        $number_of_rows = $stmt->rowCount();
-                            if ($number_of_rows > 0) {
-                                if (isset($_GET['submit'])) {
-                                    if ($_GET['submit'] == "delete") {
-                                        $bookid = $_GET['bookid'];
-                                            $deletewishlist= "DELETE FROM `tbl_wishlist` WHERE user_email = '$useremail' AND book_id = '$bookid'";
-                                            $conn->exec($deletewishlist);
-                                            echo "<script>alert('Book removed')</script>";
-                            
-                                    }
-                                }
-                            } else {
-                                echo "<script>alert('Your wishlist is currently empty')</script>";
-                                echo "<script> window.location.replace('index.php')</script>";
-                                exit;
-                            }
                         ?>
-                        <div class="wishlist-section">
+                        <div class="wishlist-section" style="display: none;">
                             <h4 class="w3-center" style="font-weight: 600; margin-top:20px;">My Wishlist</h4>
                             <hr>
-                            <?php if (empty($rows)) echo "<p style='font-size: large;'>No book found.</p>";
-                            else {
-                                foreach ($rows as $wishlist) { ?>
-                                    <?php ?><div class="card mt-3" style="margin-bottom: 30px;">
+                            <?php
+                            if (empty($rows)) {
+                                echo "<p style='font-size: large;'>No book found.</p>";
+                            } else {
+                                foreach ($rows as $wishlist) {
+                            ?>
+                                    <div class="card mt-3" style="margin-bottom: 30px;">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <!-- Book Image -->
                                                     <img src="images/books/<?php echo $wishlist['book_id']; ?>.jpg" alt="Book Image" class="img-fluid" style="width: 60%; margin-bottom: 10px;">
                                                 </div>
-                                                <div class="col-md-6" style="text-align: left;">
+                                                <div class="col-md-9" style="text-align: left;">
                                                     <!-- Order Details -->
-                                                    <h3 class="card-title reduce" style="margin-top: 30px;"><b><?php echo $wishlist['book_title']; ?></b></h3>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h3 class="card-title reduce book-title" style="margin-top: 50px;"><a href="bookdetails.php?bookid=<?php echo $wishlist['book_id']; ?>"><b><?php echo $wishlist['book_title']; ?></b></a></h3>
+
+                                                    </div>
                                                     <p class="card-text reduce" style="font-size: large;">Price: RM <?php echo number_format($wishlist['book_price'], 2); ?></p>
                                                     <p class="card-text reduce" style="font-size: large; margin-top: -10px;">Quantity: <?php echo $wishlist['book_qty']; ?></p>
-                                                </div>
-                                                <div class="status-container">
-                                                    <span style="text-align: start;"></span>
-                                                    <span class="status"><i class='fa-solid fa-trash-can' style='cursor: pointer; color: black;' onClick='deleteList($bookid);'></i></span>
+                                                    <div class="status-container">
+                                                        <form class="delete-entry-form" method="POST" action="deleteprofile.php?wishlist_id=<?php echo $wishlist['wishlist_id']; ?>&user_email=<?php echo $wishlist['user_email']; ?>">
+                                                            <button type="button" class="btn btn-link delete-button trash" onclick="openDeleteModalWishlist(<?php echo $wishlist['wishlist_id']; ?>, '<?php echo $wishlist['user_email']; ?>')">
+                                                                <span class="delete-icon-circle">
+                                                                    <i class="fas fa-times delete-icon"></i>
+                                                                </span>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><?php }
-                                    } ?>
+                                    </div>
+                            <?php
+                                }
+                            }
+                            ?>
                         </div>
                         <!--Edit Profile-->
                         <div class="edit-profile-section" style="display: none;">
@@ -579,38 +618,6 @@ if (isset($_POST['addaddress'])) {
                 preview.src = 'images/userimg.png';
             }
         }
-        function deleteList($bookid) {
-                // Update the quantity label on the frontend immediately
-                //const qtyLabel = document.getElementById("qtyid_" + bookid);
-                //const currentQty = parseInt(qtyLabel.innerHTML);
-
-                //qtyLabel.innerHTML = ""; // Remove the quantity label
-                //qtyLabel.parentNode.parentNode.remove();
-                window.location.replace("profile.php");
-                // Remove the item row from the cart table
-
-                // Perform the AJAX request to update the cart on the backend
-                jQuery.ajax({
-                    method: "GET",
-                    url: "updatewishlist.php",
-                    data: "bookid=" + bookid + "&submit=delete",
-                    cache: false,
-                    dataType: "json",
-                    success: function(response) {
-                        console.log(response);
-                        if (response.status === "success") {
-                            // Update other elements on the frontend if needed
-                            
-                        } else {
-                            alert("Failed");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle error here
-                        console.log(xhr.responseText);
-                    }
-                });
-            }
     </script>
 
     <br><br>
@@ -953,6 +960,32 @@ if (isset($_POST['addaddress'])) {
 
         function closeDeleteModal() {
             const modal = document.getElementById("deleteaddress");
+            modal.style.display = "none";
+        }
+    </script>
+
+    <!--Delete Wishlist-->
+    <div class="delete-entry-modal" id="deletewishlist">
+        <div class="delete-entry-modal-content">
+            <h2><b>Delete Wishlist</b></h2>
+            <p>Are you sure you want to delete this wishlist?</p>
+            <form method="POST" id="deleteWishlistForm">
+                <button class="btnDelete" type="submit" name="delete" value="deleteWishlist">Delete</button>
+                <button class="btnCancel" type="button" onclick="closeDeleteModalWishlist()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openDeleteModalWishlist(wishlistId, userEmail) {
+            const modal = document.getElementById("deletewishlist");
+            const form = document.getElementById("deleteWishlistForm");
+            form.action = `deleteprofile.php?wishlist_id=${wishlistId}&user_email=${userEmail}`;
+            modal.style.display = "block";
+        }
+
+        function closeDeleteModalWishlist() {
+            const modal = document.getElementById("deletewishlist");
             modal.style.display = "none";
         }
     </script>
