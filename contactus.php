@@ -114,7 +114,6 @@ function sendMail($useremail, $option, $name, $email, $phone, $text) {
             position: relative;
         }
         form{
-            padding: 2.3rem 2.2rem;
             z-index: 10;
             overflow: hidden;
             position: relative;
@@ -126,7 +125,7 @@ function sendMail($useremail, $option, $name, $email, $phone, $text) {
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
-        .title_1{
+        .title{
             color:black;
             font-weight: 500;
             font-size: 2rem;
@@ -366,7 +365,7 @@ function sendMail($useremail, $option, $name, $email, $phone, $text) {
             align-items: flex-start;
             padding: 20px;
             background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
 
         .quicklinks ul,
@@ -438,7 +437,7 @@ function sendMail($useremail, $option, $name, $email, $phone, $text) {
     <div class="box">
             <div class="contact-form">
                 <form action="contactus.php" method="GET">
-                    <h3 class="title_1">Contact Us</h3>
+                    <h3 class="title">Contact Us</h3>
                     <h3 style="font-size: 1.2rem;">Reason for Contact</h3>
                     <div class="reason">
                         <select id="-name" class="select_reason" name="option">
@@ -472,21 +471,20 @@ function sendMail($useremail, $option, $name, $email, $phone, $text) {
                     </div>
                     <p>
                         Please enter the details of your request. A member of our support staff will respond within the next 24 hours. 
-                    </p><br>
+                    </p>
                     <div class="field">
                         <label class="form__label field__label" for="attachment">Attachments</label>
                         <div class="fileinputs">
                           <input class="field__input" autocomplete="off" type="file" id="attachment" name="attachment" value="">
                           <p>**File size should not exceed 2MB</p>
-                        </div>
-      
+                        </div>      
                     </div>
                     <input type="submit" value="Send" class="clickable-btn">
                     <input type="reset" value="Reset" class="clickable-btn">
                 </form>
             </div>
             <div class="contact_info">
-                <h3 class="title">Contact Information</h3>
+                <br><br><h3 class="title">Contact Information</h3>
                 <div class="view-info">
                     <div class="view-information">
                         <span class="view-icon"></span>

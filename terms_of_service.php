@@ -1,27 +1,6 @@
 <?php
 include_once("dbconnect.php");
 include "menu.php";
-
-/*if (isset($_GET['submit'])) {
-    include_once("dbconnect.php");
-    if ($_GET['submit'] == "cart") {
-        if ($useremail == "Guest") {
-            echo "<script>alert('Please login or register')</script>";
-            echo "<script> window.location.replace('login.php')</script>";
-        }
-    }
-    if ($_GET['submit'] == "search") {
-        $search = $_GET['search'];
-        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
-    }
-} else {
-    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
-}
-
-$stmt = $conn->prepare($sqlquery);
-$stmt->execute();
-$rows = $stmt->fetchAll();*/
-
 ?>
 
 <!DOCTYPE html>
@@ -50,13 +29,7 @@ $rows = $stmt->fetchAll();*/
         div {
             display: block;
         }
-        p {
-            display: block;
-            margin-block-start: 1em;
-            margin-block-end: 1em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
-        }
+        
         .box-2{
             padding-top: 2.5rem;
             padding-bottom: 2.5rem;
@@ -299,8 +272,8 @@ $rows = $stmt->fetchAll();*/
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="booklist.php">All</a></li>
-                    <li><a href="#">New Arrival</a></li>
-                    <li><a href="#">Best Seller</a></li>
+                    <li><a href="newbooks.php">Latest Arrival</a></li>
+                    <li><a href="bestseller.php">Best Seller</a></li>
                 </ul>
             </div>
             <div class="contact_us">
@@ -322,7 +295,7 @@ $rows = $stmt->fetchAll();*/
             </div>
         </div>    
         <div class="copy-right">
-            <p>
+            <p style="margin-top: -1px;">
                 Copyright © 2023 | BookishHub®
             </p>
         </div>

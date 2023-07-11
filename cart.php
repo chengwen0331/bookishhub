@@ -296,7 +296,7 @@ function addCart(bookid, book_price) {
                     document.getElementById("bookprid_" + bookid).innerHTML = "Price: RM " + response.data.booktotal[bookid];
                 }
             } else {
-                alert("Failed");
+                alert("Quantity exceeds availability");
                 // Update the quantity label on the frontend back to the previous value
                 qtyLabel.innerHTML = currentQuantity;
             }

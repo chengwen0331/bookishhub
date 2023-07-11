@@ -1,27 +1,6 @@
 <?php
 include_once("dbconnect.php");
 include "menu.php";
-
-/*if (isset($_GET['submit'])) {
-    include_once("dbconnect.php");
-    if ($_GET['submit'] == "cart") {
-        if ($useremail == "Guest") {
-            echo "<script>alert('Please login or register')</script>";
-            echo "<script> window.location.replace('login.php')</script>";
-        }
-    }
-    if ($_GET['submit'] == "search") {
-        $search = $_GET['search'];
-        $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 AND book_title LIKE '%$search%'";
-    }
-} else {
-    $sqlquery = "SELECT * FROM tbl_books WHERE book_qty > 0 ORDER BY book_id DESC LIMIT 8";
-}
-
-$stmt = $conn->prepare($sqlquery);
-$stmt->execute();
-$rows = $stmt->fetchAll();*/
-
 ?>
 
 <!DOCTYPE html>
@@ -110,13 +89,6 @@ $rows = $stmt->fetchAll();*/
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-        }
-        p {
-            display: block;
-            margin-block-start: 1em;
-            margin-block-end: 1em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
         }
         .contain-text p{
             margin-top: 0;

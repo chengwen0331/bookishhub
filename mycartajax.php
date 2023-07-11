@@ -28,6 +28,20 @@ if (isset($_GET['submit'])) {
 
     if ($_GET['submit'] == "add") {
         $cartqty = $bookcurqty + 1;
+    
+        // Check if the added quantity exceeds the available stock
+        $sqlStock = "SELECT book_qty FROM tbl_books WHERE book_id = :bookid";
+        $stmtStock = $conn->prepare($sqlStock);
+        $stmtStock->bindParam(':bookid', $bookid);
+        $stmtStock->execute();
+        $stock = $stmtStock->fetchColumn();
+    
+        if ($cartqty > $stock) {
+            $response = array('status' => 'failed', 'data' => null);
+            sendJsonResponse($response);
+            return;
+        }
+    
         $updatecart = "UPDATE tbl_carts SET cart_qty = :cartqty WHERE user_email = :useremail AND book_id = :bookid";
         $stmtupdatecart = $conn->prepare($updatecart);
         $stmtupdatecart->bindParam(':cartqty', $cartqty);
